@@ -5,13 +5,75 @@
 
 <meta charset="utf-8" />
 
-<title></title>
+<title>Realtime Q&amp;A</title>
+
+<!-- Custom fonts via fonts.com -->
+<link rel="stylesheet" 
+      href="http://fast.fonts.com/cssapi/6a912a6e-163c-4c8b-afe0-e3d22ffab02e.css" />
+
+<!-- Main site styles -->
+<link rel="stylesheet" href="./assets/styles/main.css" />
 
 </head>
 
 <body>
 
+<header>
+    <h1>Realtime Q&amp;A</h1>
+    <p class="tagline">
+        A live feedback system for classes, presentations, and conferences.
+    </p><!--/.tagline-->
+</header>
 
+<section>
+
+    <form id="presenting">
+        <h2>Presenting?</h2>
+        <p>Create a room to start your Q&amp;A session.</p>
+        <label>
+            Tell us your name (so attendees know who you are).
+            <input type="text" name="presenter-name" />
+        </label>
+        <label>
+            Tell us your email (so attendees can get in touch with you).
+            <input type="email" name="presenter-email" />
+        </label>
+        <label>
+            What is your session called?
+            <input type="text" name="session-name" />
+        </label>
+        <input type="submit" value="Create Your Room" />
+    </form><!--/#presenting-->
+
+    <form id="attending">
+        <h2>Attending?</h2>
+        <p>Join a room using its 4-character ID.</p>
+        <label>
+            Tell us your name (so we know who you are).
+            <input type="text" name="attendee-name" />
+        </label>
+        <label>
+            What is your session's ID?
+            <input type="text" name="session-id" />
+        </label>
+        <input type="submit" value="Join This Room" />
+    </form><!--/#attending-->
+
+</section>
+
+<footer>
+    <ul>
+        <li class="copyright">
+            &copy; 2012 Jason Lengstorf
+        </li><!--/.copyright-->
+        <li>
+            Part of <em>Realtime Web Apps: HTML5 Websockets, Pusher, and the 
+            Web&rsquo;s Next Big Thing</em>. 
+            <a href="http://amzn.to/S2HRiS">Get the Book</a> | 
+            <a href="http://cptr.me/UkMSmn">Source Code (on GitHub)</a>
+        </li>
+    </ul>
+</footer>
 
 </body>
 
