@@ -15,5 +15,5 @@ Documentation
 
 For documentation, [read the book][1].
 
-[1] http://amzn.to/S2HRiS
+[1]: http://amzn.to/S2HRiS
 
