@@ -1,33 +1,41 @@
 <?php
 
 //-----------------------------------------------------------------------------
-// Initialization
+// Initializes app settings and variables
 //-----------------------------------------------------------------------------
 
-// Turn on error reporting
-ini_set('display_errors', 1);
-error_reporting(E_ALL^E_STRICT);
-
-// Set the timezone
-date_default_timezone_set('US/Pacific');
-
-// Define site-wide constants
+// Defines site-wide constants
 define('APP_PATH',   dirname(__FILE__));
 define('APP_FOLDER', dirname($_SERVER['SCRIPT_NAME']));
 define('APP_URL',    'http://' . $_SERVER['SERVER_NAME'] . APP_FOLDER);
 define('SYS_PATH',   APP_PATH . '/system');
 
-// Load required files
+// Loads the configuration variables
+require_once SYS_PATH . '/config/config.inc.php';
+
+// Turns on error reporting if in debug mode
+if (DEBUG===TRUE) {
+    ini_set('display_errors', 1);
+    error_reporting(E_ALL^E_STRICT);
+} else {
+    ini_set('display_errors', 0);
+    error_reporting(0);
+}
+
+// Sets the timezone
+date_default_timezone_set(APP_TIMEZONE);
+
+// Loads required files
 require_once SYS_PATH . '/lib/class.db.inc.php';
 require_once SYS_PATH . '/lib/Pusher.php';
 require_once SYS_PATH . '/helper/class.view.inc.php';
 
 
 //-----------------------------------------------------------------------------
-// Load and process view data
+// Loads and processes view data
 //-----------------------------------------------------------------------------
 
-// Parse the URL
+// Parses the URL
 $url_array  = read_url();
 $class_name = get_controller_classname(&$url_array);
 $options    = $url_array;
@@ -43,7 +51,7 @@ $title = $controller->get_title();
 
 
 //-----------------------------------------------------------------------------
-// Output the view
+// Outputs the view
 //-----------------------------------------------------------------------------
 
 require_once SYS_PATH . '/inc/header.inc.php';
