@@ -27,6 +27,20 @@
 
 <section>
 
+    <form id="attending">
+        <h2>Attending?</h2>
+        <p>Join a room using its 4-character ID.</p>
+        <label>
+            Tell us your name (so we know who you are).
+            <input type="text" name="attendee-name" />
+        </label>
+        <label>
+            What is your session's ID?
+            <input type="text" name="session-id" />
+        </label>
+        <input type="submit" value="Join This Room" />
+    </form><!--/#attending-->
+
     <form id="presenting">
         <h2>Presenting?</h2>
         <p>Create a room to start your Q&amp;A session.</p>
@@ -45,20 +59,6 @@
         <input type="submit" value="Create Your Room" />
     </form><!--/#presenting-->
 
-    <form id="attending">
-        <h2>Attending?</h2>
-        <p>Join a room using its 4-character ID.</p>
-        <label>
-            Tell us your name (so we know who you are).
-            <input type="text" name="attendee-name" />
-        </label>
-        <label>
-            What is your session's ID?
-            <input type="text" name="session-id" />
-        </label>
-        <input type="submit" value="Join This Room" />
-    </form><!--/#attending-->
-
 </section>
 
 <footer>
@@ -69,6 +69,8 @@
         <li>
             Part of <em>Realtime Web Apps: HTML5 Websockets, Pusher, and the 
             Web&rsquo;s Next Big Thing</em>. 
+        </li>
+        <li>
             <a href="http://amzn.to/S2HRiS">Get the Book</a> | 
             <a href="http://cptr.me/UkMSmn">Source Code (on GitHub)</a>
         </li>
