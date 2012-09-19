@@ -5,7 +5,7 @@
         <h2><?php echo $session_name; ?></h2>
         <p>
             Presented by <?php echo $presenter; ?> 
-            (<a href="mailto:<?php echo $email; ?>" tabindex="100">email</a>)
+            (<a href="mailto:<?php echo $email; ?>">email</a>)
         </p>
         <?php echo $controls; ?> 
     </header>
