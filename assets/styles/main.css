@@ -249,6 +249,7 @@ label input:hover { background-color: #fff; }
 footer { margin-top: 6em; }
 
 footer ul {
+    overflow: hidden;
     width: 960px;
     margin: 0 auto;
     padding: 0;
@@ -256,10 +257,11 @@ footer ul {
 
 footer li {
     float: right;
+    margin-left: 1em;
     list-style: none;
 }
 
-footer li.copyright { float: left; }
+footer li.copyright { float: left; margin-left: 0; }
 
 
 /* Questions View
@@ -392,3 +394,115 @@ form#ask-a-question,#questions {
 }
 
 #close-this-session label input { width: 305px; }
+
+@media screen and (max-width: 960px)
+{
+
+    header h1,header p { width: 760px; }
+
+    header { padding: .75em 0 1.2em; }
+
+    section { width: 740px; }
+
+    section header,#close-this-session {
+        float: none; 
+        width: 680px; 
+        margin: 0 auto 1.5em; 
+        overflow: hidden;
+    }
+
+    #close-this-session { margin: 1em auto 0; }
+
+    h3 { margin: 0 0 .75em; }
+
+    p { margin: 0 0 2em; padding: 0; }
+
+    header>p,section>p { font-size: .875em; }
+
+    form { width: 340px; padding: 0 8px; }
+
+    form#ask-a-question { float: none; width: 680px; margin: 0 auto 1em; }
+
+    form p { font-size: 1em; }
+
+    label { width: 100%; }
+
+    #ask-a-question label { width: 80%; }
+
+    #close-this-session label { width: 59%; float: left;}
+
+    #close-this-session label input { width: 88%; margin: 0; }
+
+    #close-this-session input { float: left; margin: .6em 0 0; }
+
+    input { font-size: 1.5em; }
+
+    #ask-a-question input { font-size: 1.75em; }
+
+    label input,#ask-a-question label input { width: 91%; }
+
+    #questions { margin: 0 auto; }
+    
+    footer { margin-top: 4em; padding: 0;}
+
+    footer ul { width: 740px; }
+
+    footer li,footer li.copyright { float: none; margin: .75em 0;}
+
+}
+
+@media screen and (max-width: 768px)
+{
+
+    header h1,header p,section,section header,form#ask-a-question,
+    #questions {
+        width: 300px;
+    }
+
+    header { padding-bottom: .75em; }
+
+    header h1 { font-size: 2.4em; }
+
+    form,form#attending,form#ask-a-question,#close-this-session {
+        float: none;
+        width: 90%;
+        margin: 0 auto 3em;
+    }
+
+    #close-this-session { margin: 1em auto 0; }
+
+    form#ask-a-question { overflow: visible; }
+
+    form p { font-size: .75em; }
+
+    label input { width: 88%; font-size: 1.6em; }
+
+    #ask-a-question label,#close-this-session label { width: 270px; }
+
+    #ask-a-question label input { width: 87%; }
+
+    #ask-a-question input,#close-this-session input { 
+        float: none; 
+        margin: 0 auto; 
+    }
+
+    #questions li { font-size: 1.125em; line-height: 1.125em; }
+
+    #questions li:before { top: 20px; left: 24px; margin-top: 0;}
+
+    #questions.presenter li:before { 
+        top: auto; 
+        right: 24px; 
+        bottom: 6px;
+        left: auto; 
+    }
+
+    #questions .vote { margin: 20px 0 0;}
+
+    #questions p { width: 210px; margin: 0; }
+
+    footer { margin-top: 3em; }
+
+    footer ul { width: 300px; }
+
+}
