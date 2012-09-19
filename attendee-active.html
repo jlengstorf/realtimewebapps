@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+
+<meta charset="utf-8" />
+
+<title>Realtime Q&amp;A</title>
+
+<!-- Custom fonts via fonts.com -->
+<link rel="stylesheet" 
+      href="http://fast.fonts.com/cssapi/6a912a6e-163c-4c8b-afe0-e3d22ffab02e.css" />
+
+<!-- Main site styles -->
+<link rel="stylesheet" href="./assets/styles/main.css" />
+
+</head>
+
+<body>
+
+<header>
+    <h1>Realtime Q&amp;A</h1>
+    <p class="tagline">
+        A live feedback system for classes, presentations, and conferences.
+    </p><!--/.tagline-->
+</header>
+
+<section>
+
+    <header>
+        <h2>Realtime Web Apps &amp; the Mobile Internet</h2>
+        <p>
+            Presented by Jason Lengstorf 
+            (<a href="mailto:jason@lengstorf.com" tabindex="100">email</a>)
+        </p>
+    </header>
+
+    <form id="ask-a-question">
+        <label>
+            If you have a question and you don’t see it below, ask it here.
+            <input type="text" name="new-question" tabindex="1" />
+        </label>
+        <input type="submit" value="Ask" tabindex="2" />
+    </form><!--/#ask-a-question-->
+
+    <ul id="questions">
+        <li data-id="1" data-count="27">
+            <p>
+                What is the best way to implement realtime features today?
+            </p>
+            <a href="#" class="vote">Vote Up This Question</a>
+        </li>
+        <li data-id="2" data-count="14">
+            <p>
+                Does this work on browsers that don’t support the 
+                WebSockets API?
+            </p>
+            <a href="#" class="vote">Vote Up This Question</a>
+        </li>
+    </ul><!--/#questions-->
+
+</section>
+
+<footer>
+    <ul>
+        <li class="copyright">
+            &copy; 2012 Jason Lengstorf
+        </li><!--/.copyright-->
+        <li>
+            Part of <em>Realtime Web Apps: HTML5 Websockets, Pusher, and the 
+            Web&rsquo;s Next Big Thing</em>. 
+            <a href="http://amzn.to/S2HRiS">Get the Book</a> | 
+            <a href="http://cptr.me/UkMSmn">Source Code (on GitHub)</a>
+        </li>
+    </ul>
+</footer>
+
+</body>
+
+</html>
