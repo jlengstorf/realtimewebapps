@@ -21,18 +21,6 @@ bold: font-family:'NewsGothicNo.2W01-Bold';
 bold-italic: font-family:'NewsGothicNo.2W01-BoldI';
 */
 
-body {
-    background-color: #fbf7e7;
-    margin: 0;
-}
-
-header,footer,input {
-    -webkit-box-shadow: 0 0 10px rgba(107, 94, 42, .6);
-    -moz-box-shadow: 0 0 10px rgba(107, 94, 42, .6);
-    -o-box-shadow: 0 0 10px rgba(107, 94, 42, .6);
-    box-shadow: 0 0 10px rgba(107, 94, 42, .6);
-}
-
 
 /* Basic Font Styles
  ----------------------------------------------------------------------------*/
@@ -64,9 +52,29 @@ h2 {
     letter-spacing: -.08em;
 }
 
+h3 {
+    margin: 0 365px .75em 0;
+    font-size: 1.875em;
+    line-height: 1em;
+    letter-spacing: -.08em;
+    text-align: center;
+}
+
+p {
+    text-align: center;
+    margin: 0 365px 2em 0;
+    padding: 0 6em;
+}
+
 a {
     font-family: 'NewsGothicNo.2W01-Mediu 710407';
     color: #e06f00;
+    text-decoration: none;
+}
+
+a:active,a:hover,a:focus {
+    text-decoration: underline;
+    outline: none;
 }
 
 .tagline {
@@ -79,6 +87,7 @@ a {
 
 form p {
     margin: 0 0 1em;
+    padding: 0;
     font-size: 1.375em;
 }
 
@@ -104,8 +113,24 @@ input {
 label input {
     font-family: 'NewsGothicNo.2W01-Light 710401';
     font-size: 1.75em;
+    letter-spacing: .08em;
     color: #1f1b0c;
     background-color: #fff;
+}
+
+section header h2 {
+    font-size: 1.5em;
+    line-height: 1.125em;
+    letter-spacing: -.06em;
+}
+
+#questions li {
+    font-size: 1.33em;
+    letter-spacing: .1em;
+}
+
+#questions li:before {
+    font-family: 'Cooper Black W01';
 }
 
 footer li {
@@ -125,6 +150,17 @@ footer li em {
 /* Layout
  ----------------------------------------------------------------------------*/
 
+html { background-color: #fbf7e7; }
+
+body { margin: 0; }
+
+header,footer,input,li:after {
+    -webkit-box-shadow: 0 0 10px rgba(107, 94, 42, .6);
+    -moz-box-shadow: 0 0 10px rgba(107, 94, 42, .6);
+    -o-box-shadow: 0 0 10px rgba(107, 94, 42, .6);
+    box-shadow: 0 0 10px rgba(107, 94, 42, .6);
+}
+
 header,footer {
     overflow: hidden;
     background: #1f1b0c;
@@ -141,11 +177,10 @@ header {
 header h1,header p {
     width: 960px;
     margin: 0 auto;
+    padding: 0;
 }
 
-header h1 {
-    margin-bottom: .25em;
-}
+header h1 { margin-bottom: .25em; }
 
 section {
     width: 960px;
@@ -159,9 +194,7 @@ form {
     text-align: center;
 }
 
-form#attending {
-    float: right;
-}
+form#attending { float: right; }
 
 label {
     display: block;
@@ -176,6 +209,13 @@ input {
     padding: .375em .875em;
 }
 
+input:active,input:hover,input:focus {
+    background-color: #e06f00;
+    outline: none;
+}
+
+input::-moz-focus-inner { border: 0; }
+
 label input {
     display: block;
     width: 400px;
@@ -188,11 +228,25 @@ label input {
     border-radius: 6px;
     -webkit-box-shadow: inset 2px 2px 14px rgba(107, 94, 42, .6),
         0 0 10px rgba(107, 94, 42, .6);
+    -moz-box-shadow: inset 2px 2px 14px rgba(107, 94, 42, .6),
+        0 0 10px rgba(107, 94, 42, .6);
+    -o-box-shadow: inset 2px 2px 14px rgba(107, 94, 42, .6),
+        0 0 10px rgba(107, 94, 42, .6);
+    -ms-box-shadow: inset 2px 2px 14px rgba(107, 94, 42, .6),
+        0 0 10px rgba(107, 94, 42, .6);
+    box-shadow: inset 2px 2px 14px rgba(107, 94, 42, .6),
+        0 0 10px rgba(107, 94, 42, .6);
 }
 
-footer {
-    margin-top: 6em;
+label input:active,label input:focus {
+    border-color: #e06f00;
+    background-color: #fff;
+    outline: none;
 }
+
+label input:hover { background-color: #fff; }
+
+footer { margin-top: 6em; }
 
 footer ul {
     width: 960px;
@@ -205,6 +259,136 @@ footer li {
     list-style: none;
 }
 
-footer li.copyright {
-    float: left;
+footer li.copyright { float: left; }
+
+
+/* Questions View
+ ----------------------------------------------------------------------------*/
+
+section header {
+    background: transparent;
+    float: right;
+    width: 340px;
+    margin: 0;
+    padding: 0;
+    box-shadow: none;
+    overflow: visible;
 }
+
+section header h2 {
+    margin: 0 0 .5em;
+    text-align: left;
+}
+
+section header p {
+    width: auto;
+    margin: 0;
+    text-align: left;
+}
+
+form#ask-a-question,#questions {
+    width: 596px;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+#questions { padding-bottom: 1em; }
+
+#ask-a-question label,#ask-a-question>input { float: left; }
+
+#ask-a-question label { width: 460px; }
+
+#ask-a-question label input {
+    width: 430px;
+    height: 1.7em;
+    margin: 0;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+#ask-a-question input {
+    height: 1.55em;
+    margin: 0.5em 0 0 0.5em;
+    padding: 0.1em 0.75em;
+}
+
+#questions.closed { opacity: .4; }
+
+#questions li {
+    position: relative;
+    list-style: none;
+    margin: 0;
+    padding: 1em 0 1em;
+    overflow: hidden;
+}
+
+#questions li:before {
+    content: attr(data-count);
+    position: absolute;
+    left: 0;
+    top: 50%;
+    margin-top: -.5em;
+}
+
+#questions li:after {
+    content: ' ';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    display: block;
+    width: 500px;
+    height: 2px;
+    margin-left: -250px;
+    background-color: #d9d4c3;
+    opacity: .6;
+}
+
+#questions p {
+    float: right;
+    width: 77%;
+    margin: .75em 0;
+    padding: 0;
+    text-align: left;
+}
+
+#questions .answer {
+    float: right;
+    display: block;
+    width: 78px;
+    height: 88px;
+    margin: 0px 0 0;
+    text-indent: -9999px;
+    overflow: hidden;
+    background: url(../images/sprite.jpg) right top no-repeat;
+}
+
+#questions .vote {
+    background: url(../images/sprite.jpg) left top no-repeat;
+    display: block;
+    width: 76px;
+    height: 76px;
+    margin: 0 0 0 2em;
+    text-indent: -9999px;
+    overflow: hidden;
+}
+
+#questions.closed .vote { opacity: .2; }
+
+#questions a.answer:active,#questions a.answer:hover,#questions a.answer:focus,
+#questions a.vote:active,#questions a.vote:hover,#questions a.vote:focus {
+    background-position-y: bottom;
+}
+
+#questions.closed a.vote:active,#questions.closed a.vote:hover,
+#questions.closed a.vote:focus {
+    background-position-y: top;
+    cursor: default;
+}
+
+#close-this-session {
+    width: 340px;
+    margin: 2em 0 0;
+}
+
+#close-this-session label input { width: 305px; }
