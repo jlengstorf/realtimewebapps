@@ -4,11 +4,20 @@
 // Initializes app settings and variables
 //-----------------------------------------------------------------------------
 
+// Starts the session
+if (!isset($_SESSION)) {
+    session_start();
+}
+
 // Defines site-wide constants
 define('APP_PATH',   dirname(__FILE__));
 define('APP_FOLDER', dirname($_SERVER['SCRIPT_NAME']));
-define('APP_URL',    'http://' . $_SERVER['SERVER_NAME'] . APP_FOLDER);
+define(
+    'APP_URL', 
+    remove_double_slashes('http://' . $_SERVER['SERVER_NAME'] . APP_FOLDER)
+);
 define('SYS_PATH',   APP_PATH . '/system');
+define('FORM_ACTION', remove_double_slashes(APP_FOLDER . '/process.php'));
 
 // Loads the configuration variables
 require_once SYS_PATH . '/config/config.inc.php';
@@ -22,7 +31,7 @@ if (DEBUG===TRUE) {
     error_reporting(0);
 }
 
-// Sets the timezone
+// Sets the timezone to avoid a notice
 date_default_timezone_set(APP_TIMEZONE);
 
 // Loads required files
@@ -105,6 +114,17 @@ function get_controller_classname( $url_array )
 {
     $controller = array_shift($url_array);
     return ucfirst($controller);
+}
+
+/**
+ * Removes double slashes (except in the protocol)
+ *
+ * @param $dirty_path string    The path to check for double slashes
+ * @return string               The cleaned path
+ */
+function remove_double_slashes( $dirty_path )
+{
+    return preg_replace('~(?<!:)//~', '/', $dirty_path);
 }
 
 /**
