@@ -8,13 +8,7 @@
 class Db
 {
 
-    public  $db;
-
-    protected $fields = '*',
-              $table  = NULL,
-              $where  = '1=1',
-              $order  = '1',
-              $limit  = '0,30';
+    public static $db;
 
     /**
      * Creates a PDO connection to MySQL
