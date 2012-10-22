@@ -41,6 +41,10 @@ class Home
     {
         $view = new View($view);
 
+        // Generate a nonce for security purposes
+        $nonce = base64_encode(uniqid(NULL, TRUE));
+        $view->nonce = $_SESSION['nonce'] = $nonce;
+
         $view->render();
     }
 
