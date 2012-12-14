@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * A sample configuration file
+ *
+ * The variables below need to be filled out with environment specific data.
+ *
+ * @author  Jason Lengstorf <jason@lengstorf.com>
+ */
+
+
 // Set up an array for constants
 $_C = array();
 
@@ -16,12 +25,18 @@ $_C['APP_TIMEZONE'] = 'US/Pacific';
 //-----------------------------------------------------------------------------
 
 $_C['DB_HOST'] = 'localhost';
+$_C['DB_NAME'] = '';
+$_C['DB_USER'] = '';
+$_C['DB_PASS'] = '';
 
-$_C['DB_NAME'] = 'your_db_name';
 
-$_C['DB_USER'] = 'db_username';
+//-----------------------------------------------------------------------------
+// Pusher credentials
+//-----------------------------------------------------------------------------
 
-$_C['DB_PASS'] = 'db_password';
+$_C['PUSHER_KEY']    = '';
+$_C['PUSHER_SECRET'] = '';
+$_C['PUSHER_APPID']  = '';
 
 
 //-----------------------------------------------------------------------------

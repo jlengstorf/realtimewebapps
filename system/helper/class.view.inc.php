@@ -39,19 +39,23 @@ class View
      * @return mixed            A string of markup if $print is TRUE or void
      */
     public function render( $print=TRUE ) {
+        // Converts the array of view variables to individual variables
         extract($this->vars);
-        $view_filepath = SYS_PATH . '/views/' . $this->view . '.inc.php';
 
+        // Checks to make sure the requested view exists
+        $view_filepath = SYS_PATH . '/views/' . $this->view . '.inc.php';
         if (!file_exists($view_filepath)) {
             throw new Exception("That view file doesn't exist.");
         }
 
+        // Turns on output buffering if markup should be returned, not printed
         if (!$print) {
             ob_start();
         }
 
         require $view_filepath;
 
+        // Returns the markup if requested
         if (!$print) {
             return ob_get_clean();
         }

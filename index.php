@@ -1,23 +1,43 @@
 <?php
 
+/**
+ * The initialization script for the app
+ *
+ * @author  Jason Lengstorf <jason@lengstorf.com>
+ */
+
+
 //-----------------------------------------------------------------------------
-// Initializes app settings and variables
+// Initializes environment variables
+//-----------------------------------------------------------------------------
+
+// Server path to this app (i.e. /var/www/vhosts/realtime/httpdocs/realtime)
+define('APP_PATH',   dirname(__FILE__));
+
+// App folder, relative from web root (i.e. /realtime)
+define('APP_FOLDER', dirname($_SERVER['SCRIPT_NAME']));
+
+// URL path to the app (i.e. http://example.org/realtime)
+define(
+    'APP_URL', 
+    remove_double_slashes('http://' . $_SERVER['SERVER_NAME'] . APP_FOLDER)
+);
+
+// Server path to the system folder (for includes)
+define('SYS_PATH',   APP_PATH . '/system');
+
+// Relative path to the form processing script (i.e. /realtime/process.php)
+define('FORM_ACTION', remove_double_slashes(APP_FOLDER . '/process.php'));
+
+
+//-----------------------------------------------------------------------------
+// Initializes the app
 //-----------------------------------------------------------------------------
 
 // Starts the session
 if (!isset($_SESSION)) {
     session_start();
 }
-
-// Defines site-wide constants
-define('APP_PATH',   dirname(__FILE__));
-define('APP_FOLDER', dirname($_SERVER['SCRIPT_NAME']));
-define(
-    'APP_URL', 
-    remove_double_slashes('http://' . $_SERVER['SERVER_NAME'] . APP_FOLDER)
-);
-define('SYS_PATH',   APP_PATH . '/system');
-define('FORM_ACTION', remove_double_slashes(APP_FOLDER . '/process.php'));
 
 // Loads the configuration variables
 require_once SYS_PATH . '/config/config.inc.php';
@@ -34,11 +54,6 @@ if (DEBUG===TRUE) {
 // Sets the timezone to avoid a notice
 date_default_timezone_set(APP_TIMEZONE);
 
-// Loads required files
-require_once SYS_PATH . '/lib/class.db.inc.php';
-require_once SYS_PATH . '/lib/Pusher.php';
-require_once SYS_PATH . '/helper/class.view.inc.php';
-
 
 //-----------------------------------------------------------------------------
 // Loads and processes view data
@@ -49,13 +64,20 @@ $url_array  = read_url();
 $class_name = get_controller_classname(&$url_array);
 $options    = $url_array;
 
+// Sets a default view if nothing is passed in the URL (i.e. on the home page)
 if (empty($class_name)) {
     $class_name = 'Home';
 }
 
-$controller = new $class_name($options);
+// Tries to initialize the requested view, or else throws a 404 error
+try {
+    $controller = new $class_name($options);
+} catch (Exception $e) {
+    header('HTTP/1.0 404 Not Found');
+    $controller = new Notfound($options);
+}
 
-// View-specific variables
+// Loads the <title> tag value for the view
 $title = $controller->get_title();
 
 
@@ -141,6 +163,7 @@ function __autoload( $class_name )
     $possible_locations = array(
         SYS_PATH . '/models/class.' . $fname . '.inc.php',
         SYS_PATH . '/controllers/class.' . $fname . '.inc.php',
+        SYS_PATH . '/helper/class.' . $fname . '.inc.php',
     );
 
     // Loops through the location array and checks for a file to load
@@ -151,6 +174,6 @@ function __autoload( $class_name )
         }
     }
 
-    // Fails because no class was
+    // Fails because a valid class wasn't found
     throw new Exception("Class $class_name wasn't found.");
 }

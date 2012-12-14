@@ -5,21 +5,8 @@
  *
  * @author Jason Lengstorf <jason@lengstorf.com>
  */
-class Home
+class Home extends Controller
 {
-
-    /**
-     * Initializes the view
-     *
-     * @param $options array    Options for the view
-     * @return void
-     */
-    public function __construct( $options )
-    {
-        if (!is_array($options)) {
-            throw new Exception("No options were supplied for the room.");
-        }
-    }
 
     /**
      * Generates the title of the page
@@ -37,13 +24,10 @@ class Home
      * @param $view string  The slug of the view
      * @return void
      */
-    public function output_view( $view = 'home' )
+    public function output_view(  )
     {
-        $view = new View($view);
-
-        // Generate a nonce for security purposes
-        $nonce = base64_encode(uniqid(NULL, TRUE));
-        $view->nonce = $_SESSION['nonce'] = $nonce;
+        $view = new View('home');
+        $view->nonce = $this->generate_nonce();
 
         $view->render();
     }

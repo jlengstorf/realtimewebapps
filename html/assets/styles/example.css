@@ -149,7 +149,7 @@ html { background-color: #fbf7e7; }
 
 body { margin: 0; }
 
-header,footer,input,li:after {
+header,footer,input {
     -webkit-box-shadow: 0 0 10px rgba(31, 27, 12, .3);
             box-shadow: 0 0 10px rgba(31, 27, 12, .3);
 }
@@ -179,14 +179,6 @@ section {
     width: 960px;
     margin: 0 auto;
     overflow: hidden;
-}
-
-section#err404 {
-    text-align: center;
-}
-
-section#err404 p {
-    margin: 0 auto 2em;
 }
 
 form {
@@ -364,10 +356,6 @@ form#ask-a-question,#questions {
             box-shadow: none;
 }
 
-#questions .voted .vote input[type=submit] {
-    background-position: left bottom;
-}
-
 #questions .answer input[type=submit] { background-position: right top; }
 
 #questions .answer input:active,
@@ -382,21 +370,14 @@ form#ask-a-question,#questions {
     background-position: left bottom;
 }
 
-#questions.closed,#questions .answered { opacity: .4; }
+#questions.closed { opacity: .4; }
 
-#questions.closed .vote,#questions .answered .vote { opacity: .2; }
+#questions.closed .vote { opacity: .2; }
 
 #questions.closed .vote input:active,
 #questions.closed .vote input:hover,
 #questions.closed .vote input:focus {
     background-position: left top;
-    cursor: default;
-}
-
-#questions .answered .vote input:active,
-#questions .answered .vote input:hover,
-#questions .answered .vote input:focus {
-    background-position: left bottom;
     cursor: default;
 }
 
@@ -422,8 +403,6 @@ form#ask-a-question,#questions {
     }
 
     #close-this-room { margin: 1em auto 0; }
-
-    h3 { margin: 0 0 .75em; }
 
     p { margin: 0 0 2em; padding: 0; }
 

@@ -5,7 +5,7 @@
  *
  * @author Jason Lengstorf <jason@lengstorf.com>
  */
-class Room
+class Room extends Controller
 {
 
     public $room_id,
@@ -29,11 +29,9 @@ class Room
             throw new Exception("Invalid room ID supplied");
         }
 
-        $this->session = $this->get_session_data();
-
+        $this->room         = $this->get_room_data();
         $this->is_presenter = $this->is_presenter();
-
-        $this->is_active = $this->is_active();
+        $this->is_active    = (boolean) $this->room->is_active;
     }
 
     /**
@@ -43,7 +41,7 @@ class Room
      */
     public function get_title(  )
     {
-        return $this->session->name . ' by ' . $this->session->presenter;
+        return $this->room->room_name . ' by ' . $this->room->presenter_name;
     }
 
     /**
@@ -52,24 +50,27 @@ class Room
      * @param $view string  The slug of the view
      * @return void
      */
-    public function output_view( $view = 'room' )
+    public function output_view(  )
     {
-        $view = new View($view);
-
-        //TODO Load real data from the model
-        $view->session_name = $this->session->name;
-        $view->presenter = $this->session->presenter;
-        $view->email = $this->session->email;
+        $view = new View('room');
+        $view->room_id   = $this->room->room_id;
+        $view->room_name = $this->room->room_name;
+        $view->presenter = $this->room->presenter_name;
+        $view->email     = $this->room->email;
 
         if (!$this->is_presenter) {
-            $view->ask_form = $this->show_ask_form($this->session->email);
-            $view->questions_class = !$this->is_active ? 'closed' : NULL;
+            $view->ask_form = $this->show_ask_form();
+            $view->questions_class = NULL;
         } else {
             $view->ask_form = NULL;
             $view->questions_class = 'presenter';
         }
 
-        $view->controls = $this->show_presenter_controls();
+        if (!$this->is_active) {
+            $view->questions_class = 'closed';
+        }
+
+        $view->controls  = $this->show_presenter_controls();
         $view->questions = $this->show_questions();
 
         $view->render();
@@ -82,34 +83,43 @@ class Room
      */
     protected function show_questions(  )
     {
-        //TODO Load real questions
-        $questions = array(
-                (object) array(
-                    'question' => 'What is the best way to implement realtime features today?',
-                    'question_id' => 1,
-                    'vote_count' => 27,
-                ),
-                (object) array(
-                    'question' => 'Does this work on browsers that don’t support the WebSockets API?',
-                    'question_id' => 2,
-                    'vote_count' => 14,
-                ),
-            );
+        $questions = $this->get_questions();
 
         $output = NULL;
         foreach ($questions as $question) {
-            $view = new View('question');
-            $view->question = $question->question;
-            $view->question_id = $question->question_id;
-            $view->vote_count = $question->vote_count;
 
-            if (!$this->is_presenter) {
-                $view->vote_link = '<a href="#" class="vote">Vote Up</a>';
-                $view->answer_link = NULL;
+            /*
+             * Questions have their own view type, so this section initializes
+             * and sets up variables for the question view
+             */
+            $view = new View('question');
+            $view->question     = $question->question;
+            $view->room_id      = $this->room->room_id;
+            $view->question_id  = $question->question_id;
+            $view->vote_count   = $question->vote_count;
+
+            if ($question->is_answered==1) {
+                $view->answered_class = 'answered';
             } else {
-                $view->vote_link = NULL;
-                $view->answer_link = '<a href="#" class="answer">Answer</a>';
+                $view->answered_class = NULL;
             }
+
+            // Checks if the user has already voted up this question
+            $cookie = 'voted_for_' . $question->question_id;
+            if (isset($_COOKIE[$cookie]) && $_COOKIE[$cookie]==1) {
+                $view->voted_class = 'voted';
+            } else {
+                $view->voted_class = NULL;
+            }
+
+            $view->vote_link = $this->show_vote_form(
+                $question->question_id,
+                $question->is_answered
+            );
+
+            $view->answer_link = $this->show_answer_form(
+                $question->question_id
+            );
 
             $output .= $view->render(FALSE);
         }
@@ -118,38 +128,67 @@ class Room
     }
 
     /**
-     * Shows the "ask a question" form or a notice that the session has ended
+     * Shows the "ask a question" form or a notice that the room has ended
      *
      * @param $email string The presenter's email address
      * @return string       Markup for the form or notice
      */
-    protected function show_ask_form( $email )
+    protected function show_ask_form(  )
     {
-        ob_start();
+        if ($this->is_active) {
+            $view           = new View('ask-form');
+            $view->room_id  = $this->room->room_id;
+            $view->nonce    = $this->generate_nonce();
 
-        if ($this->is_active):
-?> 
+            return $view->render(FALSE);
+        } else {
+            $view = new View('room-closed');
+            $view->email = $this->room->email;
 
-    <form id="ask-a-question">
-        <label>
-            If you have a question and you don’t see it below, ask it here.
-            <input type="text" name="new-question" tabindex="1" />
-        </label>
-        <input type="submit" value="Ask" tabindex="2" />
-    </form><!--/#ask-a-question-->
+            return $view->render(FALSE);
+        }
+    }
 
-<?php   else: // If the session is over, shows a message ?> 
+    /**
+     * Generates the voting form for attendees
+     *
+     * @param $question_id  int     The ID of the question
+     * @param $answered     int     1 if answered, 0 if unanswered
+     * @return              mixed   Markup if attendee, NULL if presenter
+     */
+    protected function show_vote_form( $question_id, $answered )
+    {
+        if (!$this->is_presenter) {
+            $view = new View('question-vote');
+            $view->room_id      = $this->room->room_id;
+            $view->question_id  = $question_id;
+            $view->nonce        = $this->generate_nonce();
+            $view->disabled     = $answered==1 ? 'disabled' : NULL;
 
-    <h3>This session has ended.</h3>
-    <p>
-        If you have a question that wasn't answered, please 
-        <a href="mailto:<?php echo $email; ?>">email the presenter</a>.
-    </p>
+            return $view->render(FALSE);
+        }
 
-<?php
-        endif;
+        return NULL;
+    }
 
-        return ob_get_clean();
+    /**
+     * Generates the answering form for presenter
+     *
+     * @param $question_id  int     The ID of the question
+     * @return              mixed   Markup if presenter, NULL if attendee
+     */
+    protected function show_answer_form( $question_id )
+    {
+        if ($this->is_presenter) {
+            $view = new View('question-answer');
+            $view->room_id      = $this->room->room_id;
+            $view->question_id  = $question_id;
+            $view->nonce        = $this->generate_nonce();
+
+            return $view->render(FALSE);
+        }
+
+        return NULL;
     }
 
     /**
@@ -159,43 +198,43 @@ class Room
      */
     protected function show_presenter_controls(  )
     {
-        $controls = NULL;
+        if ($this->is_presenter) {
+            if (!$this->is_active) {
+                $view_class = 'presenter-reopen';
+            } else {
+                $view_class = 'presenter-controls';
+            }
 
-        if ($this->is_presenter):
-            ob_start();
-?> 
-        <form id="close-this-session">
-            <label>
-                Link to your session.
-                <input type="text" name="session-url" 
-                       value="http://rwaapp.com/1234" disabled />
-            </label>
-            <input type="submit" value="End This Session" />
-        </form><!--/#close-this-session-->
-<?php
-        endif;
+            $view = new View($view_class);
+            $view->room_id = $this->room->room_id;
+            $view->nonce = $this->generate_nonce();
 
-        $controls = ob_get_clean();
-        return $controls;
+            return $view->render(FALSE);
+        }
+
+        return NULL;
     }
 
     /**
-     * Loads information about the session
+     * Loads information about the room
      *
-     * @return object   The session data
+     * @return object   The room data
      */
-    protected function get_session_data(  )
+    protected function get_room_data(  )
     {
-        //TODO: Load real session data from the DB
-        $session = (object) array(
-            'session_id' => 1234,
-            'name'       => 'Realtime Web Apps &amp; the Mobile Internet',
-            'presenter'  => 'Jason Lengstorf',
-            'email'      => 'jason@lengstorf.com',
-            'active'     => 1,
-        );
+        $model = new Room_Model;
+        return $model->get_room_data($this->room_id);
+    }
 
-        return $session;
+    /**
+     * Loads questions for the room
+     *
+     * @return array   The question data as an array of objects
+     */
+    protected function get_questions(  )
+    {
+        $model = new Question_Model;
+        return $model->get_room_questions($this->room_id);
     }
 
     /**
@@ -205,19 +244,8 @@ class Room
      */
     protected function is_presenter(  )
     {
-        //TODO: Use session and/or cookies to identify the presenter
-        return isset($_GET['p']) ? (boolean) $_GET['p'] : FALSE;
-    }
-
-    /**
-     * Determines whether or not the session is active
-     *
-     * @return boolean  TRUE if it's active, otherwise FALSE
-     */
-    protected function is_active(  )
-    {
-        //TODO: Get sessions active status from the DB
-        return isset($_GET['a']) ? (boolean) $_GET['a'] : TRUE;
+        $cookie = 'presenter_room_' . $this->room->room_id;
+        return (isset($_COOKIE[$cookie]) && $_COOKIE[$cookie]==1);
     }
 
 }

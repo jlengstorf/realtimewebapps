@@ -1,13 +1,31 @@
 <?php
 
+/**
+ * Processing script for all form submissions
+ *
+ * @author  Jason Lengstorf <jason@lengstorf.com>
+ */
+
+
 // Starts the session
 if (!isset($_SESSION)) {
     session_start();
 }
 
+// Loads required files
 require_once dirname(__FILE__) . '/system/config/config.inc.php';
+require_once dirname(__FILE__) . '/system/lib/Pusher.php';
 
-// Makes sure the
+// Turns on error reporting if in debug mode
+if (DEBUG===TRUE) {
+    ini_set('display_errors', 1);
+    error_reporting(E_ALL^E_STRICT);
+} else {
+    ini_set('display_errors', 0);
+    error_reporting(0);
+}
+
+// Makes sure the nonce is set and matches the expected value
 if (
     isset($_SESSION['nonce']) && !empty($_SESSION['nonce']) 
     && isset($_POST['nonce']) && !empty($_POST['nonce']) 
@@ -17,25 +35,58 @@ if (
     $_SESSION['nonce'] = NULL;
 
     // Sanitizes the form action
-    $action = preg_replace('#[^a-z0-9]#', '', $_POST['action']);
+    $action = preg_replace('#[^a-z0-9-]#', '', $_POST['action']);
 
     // Defines available actions and how to process each
     $actions = array(
-        'create' => (object) array(
+        'room-create' => (object) array(
             'class'  => 'Room_Model',
             'method' => 'create_room',
+        ),
+        'room-join' => (object) array(
+            'class'  => 'Room_Model',
+            'method' => 'join_room',
+        ),
+        'room-open' => (object) array(
+            'class'  => 'Room_Model',
+            'method' => 'open_room',
+        ),
+        'room-close' => (object) array(
+            'class'  => 'Room_Model',
+            'method' => 'close_room',
+        ),
+        'question-create' => (object) array(
+            'class'  => 'Question_Model',
+            'method' => 'create_question',
+        ),
+        'question-vote' => (object) array(
+            'class'  => 'Question_Model',
+            'method' => 'vote_question',
+        ),
+        'question-answer' => (object) array(
+            'class'  => 'Question_Model',
+            'method' => 'answer_question',
         ),
     );
 
     // Makes sure there's a handler in place for the requested action
     if (array_key_exists($action, $actions)) {
         $model = new $actions[$action]->class;
-        $model->{$actions[$action]->method}();
+        $output = $model->{$actions[$action]->method}();
+
+        // Realtime stuff happens here
+        $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_APPID);
+        $channel = 'room_' . $output['room_id'];
+        $pusher->trigger($channel, $action, $output);
+
+        header("Location: ./room/" . $output['room_id']);
+        exit;
+    } else {
+        echo "<pre>The requested action doesn't exist.\n", print_r($_POST), "</pre>";
     }
 } else {
     // Bounces the user back to the home page if nonces don't match
-    // header('Location: ./');
-    echo '<pre>Nonce mismatch.', "\n", $_SESSION['nonce'], "\n", $_POST['nonce'], '</pre>';
+    header('Location: ./');
     exit;
 }
 
@@ -52,7 +103,7 @@ function __autoload( $class_name )
     // Defines all of the valid places a class file could be stored
     $possible_locations = array(
         dirname(__FILE__) . '/system/models/class.' . $fname . '.inc.php',
-        dirname(__FILE__) . '/system/lib/class.' . $fname . '.inc.php',
+        dirname(__FILE__) . '/system/helper/class.' . $fname . '.inc.php',
     );
 
     // Loops through the location array and checks for a file to load

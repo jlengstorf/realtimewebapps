@@ -15,7 +15,7 @@ $css_path   = preg_replace($pattern, '/', $dirty_path);
 
 <title><?php echo $title; ?></title>
 
-<!-- Custom fonts via fonts.com -->
+<!-- Fonts via fonts.com -->
 <link rel="stylesheet" 
       href="http://fast.fonts.com/cssapi/6a912a6e-163c-4c8b-afe0-e3d22ffab02e.css" />
 

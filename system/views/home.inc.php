@@ -4,13 +4,13 @@
     <form id="attending" method="post" 
           action="<?php echo FORM_ACTION; ?>">
         <h2>Attending?</h2>
-        <p>Join a room using its 4-character ID.</p>
+        <p>Join a room using its ID.</p>
         <label>
-            What is your session's ID?
-            <input type="text" name="session-id" />
+            What is the room's ID?
+            <input type="text" name="room_id" />
         </label>
         <input type="submit" value="Join This Room" />
-        <input type="hidden" name="action" value="attend" />
+        <input type="hidden" name="action" value="room-join" />
         <input type="hidden" name="nonce" 
                value="<?php echo $nonce; ?>" />
     </form><!--/#attending-->
@@ -32,7 +32,7 @@
             <input type="text" name="session-name" />
         </label>
         <input type="submit" value="Create Your Room" />
-        <input type="hidden" name="action" value="create" />
+        <input type="hidden" name="action" value="room-create" />
         <input type="hidden" name="nonce" 
                value="<?php echo $nonce; ?>" />
     </form><!--/#presenting-->

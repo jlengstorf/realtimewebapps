@@ -2,7 +2,7 @@
 <section>
 
     <header>
-        <h2><?php echo $session_name; ?></h2>
+        <h2><?php echo $room_name; ?></h2>
         <p>
             Presented by <?php echo $presenter; ?> 
             (<a href="mailto:<?php echo $email; ?>">email</a>)
