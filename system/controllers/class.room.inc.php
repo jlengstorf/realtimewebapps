@@ -24,9 +24,24 @@ class Room extends Controller
             throw new Exception("No options were supplied for the room.");
         }
 
-        $this->room_id = (int) $options[0];
-        if ($this->room_id===0) {
-            throw new Exception("Invalid room ID supplied");
+        $this->model = new Room_Model;
+
+        // Checks for a form submission
+        $this->actions = array(
+            'join'   => 'join_room',
+            'create' => 'create_room',
+            'open'   => 'open_room',
+            'close'  => 'close_room',
+        );
+
+        if (array_key_exists($options[0], $this->actions)) {
+            $this->handle_form_submission($options[0]);
+            exit;
+        } else {
+            $this->room_id = isset($options[0]) ? (int) $options[0] : 0;
+            if ($this->room_id===0) {
+                throw new Exception("Invalid room ID supplied");
+            }
         }
 
         $this->room         = $this->get_room_data();
@@ -47,7 +62,6 @@ class Room extends Controller
     /**
      * Loads and outputs the view's markup
      *
-     * @param $view string  The slug of the view
      * @return void
      */
     public function output_view(  )
@@ -59,7 +73,7 @@ class Room extends Controller
         $view->email     = $this->room->email;
 
         if (!$this->is_presenter) {
-            $view->ask_form = $this->show_ask_form();
+            $view->ask_form = $this->output_ask_form();
             $view->questions_class = NULL;
         } else {
             $view->ask_form = NULL;
@@ -70,8 +84,8 @@ class Room extends Controller
             $view->questions_class = 'closed';
         }
 
-        $view->controls  = $this->show_presenter_controls();
-        $view->questions = $this->show_questions();
+        $view->controls  = $this->output_presenter_controls();
+        $view->questions = $this->output_questions();
 
         $view->render();
     }
@@ -81,50 +95,14 @@ class Room extends Controller
      *
      * @return string   The marked up questions
      */
-    protected function show_questions(  )
+    protected function output_questions(  )
     {
-        $questions = $this->get_questions();
+        $controller = new Question(array($this->room_id));
 
-        $output = NULL;
-        foreach ($questions as $question) {
+        // Allows for different output for presenters vs. attendees
+        $controller->is_presenter = $this->is_presenter;
 
-            /*
-             * Questions have their own view type, so this section initializes
-             * and sets up variables for the question view
-             */
-            $view = new View('question');
-            $view->question     = $question->question;
-            $view->room_id      = $this->room->room_id;
-            $view->question_id  = $question->question_id;
-            $view->vote_count   = $question->vote_count;
-
-            if ($question->is_answered==1) {
-                $view->answered_class = 'answered';
-            } else {
-                $view->answered_class = NULL;
-            }
-
-            // Checks if the user has already voted up this question
-            $cookie = 'voted_for_' . $question->question_id;
-            if (isset($_COOKIE[$cookie]) && $_COOKIE[$cookie]==1) {
-                $view->voted_class = 'voted';
-            } else {
-                $view->voted_class = NULL;
-            }
-
-            $view->vote_link = $this->show_vote_form(
-                $question->question_id,
-                $question->is_answered
-            );
-
-            $view->answer_link = $this->show_answer_form(
-                $question->question_id
-            );
-
-            $output .= $view->render(FALSE);
-        }
-
-        return $output;
+        return $controller->output_view();
     }
 
     /**
@@ -133,62 +111,13 @@ class Room extends Controller
      * @param $email string The presenter's email address
      * @return string       Markup for the form or notice
      */
-    protected function show_ask_form(  )
+    protected function output_ask_form(  )
     {
-        if ($this->is_active) {
-            $view           = new View('ask-form');
-            $view->room_id  = $this->room->room_id;
-            $view->nonce    = $this->generate_nonce();
-
-            return $view->render(FALSE);
-        } else {
-            $view = new View('room-closed');
-            $view->email = $this->room->email;
-
-            return $view->render(FALSE);
-        }
-    }
-
-    /**
-     * Generates the voting form for attendees
-     *
-     * @param $question_id  int     The ID of the question
-     * @param $answered     int     1 if answered, 0 if unanswered
-     * @return              mixed   Markup if attendee, NULL if presenter
-     */
-    protected function show_vote_form( $question_id, $answered )
-    {
-        if (!$this->is_presenter) {
-            $view = new View('question-vote');
-            $view->room_id      = $this->room->room_id;
-            $view->question_id  = $question_id;
-            $view->nonce        = $this->generate_nonce();
-            $view->disabled     = $answered==1 ? 'disabled' : NULL;
-
-            return $view->render(FALSE);
-        }
-
-        return NULL;
-    }
-
-    /**
-     * Generates the answering form for presenter
-     *
-     * @param $question_id  int     The ID of the question
-     * @return              mixed   Markup if presenter, NULL if attendee
-     */
-    protected function show_answer_form( $question_id )
-    {
-        if ($this->is_presenter) {
-            $view = new View('question-answer');
-            $view->room_id      = $this->room->room_id;
-            $view->question_id  = $question_id;
-            $view->nonce        = $this->generate_nonce();
-
-            return $view->render(FALSE);
-        }
-
-        return NULL;
+        $controller = new Question(array($this->room_id));
+        return $controller->output_ask_form(
+            $this->is_active, 
+            $this->room->email
+        );
     }
 
     /**
@@ -196,23 +125,96 @@ class Room extends Controller
      *
      * @return mixed    Markup for the controls (or NULL)
      */
-    protected function show_presenter_controls(  )
+    protected function output_presenter_controls(  )
     {
         if ($this->is_presenter) {
             if (!$this->is_active) {
-                $view_class = 'presenter-reopen';
+                $view_class  = 'presenter-reopen';
+                $form_action = APP_URI . 'room/open';
             } else {
-                $view_class = 'presenter-controls';
+                $view_class  = 'presenter-controls';
+                $form_action = APP_URI . 'room/close';
             }
 
             $view = new View($view_class);
-            $view->room_id = $this->room->room_id;
-            $view->nonce = $this->generate_nonce();
+            $view->room_id     = $this->room->room_id;
+            $view->room_uri    = APP_URI . 'room/' . $this->room_id;
+            $view->form_action = $form_action;
+            $view->nonce       = $this->generate_nonce();
 
             return $view->render(FALSE);
         }
 
         return NULL;
+    }
+
+    /**
+     * Checks if a room exists and redirects the user appropriately
+     *
+     * @return void
+     */
+    protected function join_room(  )
+    {
+        $room_id = $_POST['room_id'];
+
+        // If the room exists, creates the URL; otherwise, sends to a 404
+        if ($this->model->room_exists($room_id)) {
+            $header = APP_URI . 'room/' . $room_id;
+        } else {
+            $header = APP_URI . 'no-room';
+        }
+
+        header("Location: " . $header);
+        exit;
+    }
+
+    /**
+     * Creates a new room and sets the creator as the presenter
+     *
+     * @return array Information about the updated room
+     */
+    protected function create_room(  )
+    {
+        $presenter = $_POST['presenter-name'];
+        $email     = $_POST['presenter-email'];
+        $name      = $_POST['session-name'];
+
+        // Store the new room and its various associations in the database
+        $output = $this->model->create_room($presenter, $email, $name);
+
+        // Make sure valid output was returned
+        if (is_array($output) && isset($output['room_id'])) {
+            $room_id = $output['room_id'];
+        } else {
+            throw new Exception('Error creating the room.');
+        }
+
+        // Makes the creator of this room its presenter
+        setcookie('presenter_room_' . $room_id, 1, time() + 2592000, '/');
+
+        return $output;
+    }
+
+    /**
+     * Marks a given room as active
+     *
+     * @return array Information about the updated room
+     */
+    protected function open_room(  )
+    {
+        $room_id = (int) $_POST['room_id'];
+        return $this->model->open_room($room_id);
+    }
+
+    /**
+     * Marks a given room as closed
+     *
+     * @return array Information about the updated room
+     */
+    protected function close_room(  )
+    {
+        $room_id = (int) $_POST['room_id'];
+        return $this->model->close_room($room_id);
     }
 
     /**
@@ -222,19 +224,7 @@ class Room extends Controller
      */
     protected function get_room_data(  )
     {
-        $model = new Room_Model;
-        return $model->get_room_data($this->room_id);
-    }
-
-    /**
-     * Loads questions for the room
-     *
-     * @return array   The question data as an array of objects
-     */
-    protected function get_questions(  )
-    {
-        $model = new Question_Model;
-        return $model->get_room_questions($this->room_id);
+        return $this->model->get_room_data($this->room_id);
     }
 
     /**

@@ -21,13 +21,16 @@ class Home extends Controller
     /**
      * Loads and outputs the view's markup
      *
-     * @param $view string  The slug of the view
      * @return void
      */
     public function output_view(  )
     {
         $view = new View('home');
         $view->nonce = $this->generate_nonce();
+
+        // Action URIs for form submissions
+        $view->join_action   = APP_URI . 'room/join';
+        $view->create_action = APP_URI . 'room/create';
 
         $view->render();
     }

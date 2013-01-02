@@ -5,7 +5,7 @@
  *
  * @author Jason Lengstorf <jason@lengstorf.com>
  */
-class Model
+abstract class Model
 {
 
     public static $db;

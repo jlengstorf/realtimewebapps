@@ -11,12 +11,14 @@ class Question_Model extends Model
     /**
      * Stores a new question with all the proper associations
      *
-     * @return  array   The IDs of the room and the new question
+     * @param   $room_id    int     The ID of the room
+     * @param   $question   string  The question text
+     * @return              array   The IDs of the room and the question
      */
-    public function create_question(  )
+    public function create_question( $room_id, $question )
     {
-        $room_id = $this->sanitize($_POST['room_id']);
-        $question = $this->sanitize($_POST['new-question']);
+        $room_id  = $this->sanitize($room_id);
+        $question = $this->sanitize($question);
 
         // Stores the new question in the database
         $sql = "INSERT INTO questions (room_id, question) 
@@ -41,11 +43,8 @@ class Question_Model extends Model
         $stmt->execute();
         $stmt->closeCursor();
 
-        // Stores a cookie so the attendee can only vote once
-        setcookie('voted_for_' . $question_id, 1, time() + 2592000, '/');
-
         return array(
-            'room_id' => $room_id,
+            'room_id'     => $room_id,
             'question_id' => $question_id,
         );
     }
@@ -53,31 +52,26 @@ class Question_Model extends Model
     /**
      * Increases the vote count of a given question
      *
-     * @return  array   The IDs of the room and the upvoted question
+     * @param   $room_id        int     The ID of the room
+     * @param   $question_id    int     The ID of the question
+     * @return                  array   The IDs of the room and the question
      */
-    public function vote_question(  )
+    public function vote_question( $room_id, $question_id )
     {
-        $room_id = $this->sanitize($_POST['room_id']);
-        $question_id = $this->sanitize($_POST['question_id']);
+        $room_id     = $this->sanitize($room_id);
+        $question_id = $this->sanitize($question_id);
 
-        // Makes sure the attendee hasn't already voted for this question
-        $cookie_id = 'voted_for_' . $question_id;
-        if (!isset($_COOKIE[$cookie_id]) || $_COOKIE[$cookie_id]!=1) {
-            // Increments the vote count for the question
-            $sql = "UPDATE question_votes 
-                    SET vote_count = vote_count+1 
-                    WHERE question_id = :question_id";
-            $stmt = self::$db->prepare($sql);
-            $stmt->bindParam(':question_id', $question_id, PDO::PARAM_INT);
-            $stmt->execute();
-            $stmt->closeCursor();
-
-            // Sets a cookie to make it harder to post multiple votes
-            setcookie($cookie_id, 1, time() + 2592000, '/');
-        }
+        // Increments the vote count for the question
+        $sql = "UPDATE question_votes 
+                SET vote_count = vote_count+1 
+                WHERE question_id = :question_id";
+        $stmt = self::$db->prepare($sql);
+        $stmt->bindParam(':question_id', $question_id, PDO::PARAM_INT);
+        $stmt->execute();
+        $stmt->closeCursor();
 
         return array(
-            'room_id' => $room_id,
+            'room_id'     => $room_id,
             'question_id' => $question_id,
         );
     }
@@ -85,7 +79,8 @@ class Question_Model extends Model
     /**
      * Returns the vote count for a given question
      *
-     * @return  int The number of votes for the given question
+     * @param   $question_id    int     The ID of the question
+     * @return                  int     The number of votes for the question
      */
     public function get_vote_count( $question_id )
     {
@@ -104,27 +99,25 @@ class Question_Model extends Model
     /**
      * Marks a given question as answered
      *
-     * @return  array   The IDs of the room and the new question
+     * @param   $room_id        int     The ID of the room
+     * @param   $question_id    int     The ID of the question
+     * @return                  array   The IDs of the room and question
      */
-    public function answer_question(  )
+    public function answer_question( $room_id, $question_id )
     {
-        $room_id = $this->sanitize($_POST['room_id']);
-        $question_id = $this->sanitize($_POST['question_id']);
+        $room_id     = $this->sanitize($room_id);
+        $question_id = $this->sanitize($question_id);
 
-        // Makes sure the person answering the question is the presenter
-        $cookie_id = 'presenter_room_' . $room_id;
-        if (!isset($_COOKIE[$cookie_id]) || $_COOKIE[$cookie_id]!=1) {
-            $sql = "UPDATE questions
-                    SET is_answered = 1
-                    WHERE id = :question_id";
-            $stmt = self::$db->prepare($sql);
-            $stmt->bindParam(':question_id', $question_id, PDO::PARAM_INT);
-            $stmt->execute();
-            $stmt->closeCursor();
-        }
+        $sql = "UPDATE questions
+                SET is_answered = 1
+                WHERE id = :question_id";
+        $stmt = self::$db->prepare($sql);
+        $stmt->bindParam(':question_id', $question_id, PDO::PARAM_INT);
+        $stmt->execute();
+        $stmt->closeCursor();
 
         return array(
-            'room_id' => $room_id,
+            'room_id'     => $room_id,
             'question_id' => $question_id,
         );
     }
@@ -132,7 +125,7 @@ class Question_Model extends Model
     /**
      * Loads all questions for a given room
      *
-     * @param   $room_id    int     The IDs of the room and the new question
+     * @param   $room_id    int     The ID of the room
      * @return              array   The questions attached to the room
      */
     public function get_room_questions( $room_id )

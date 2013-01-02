@@ -34,7 +34,6 @@ class Notfound extends Controller
     /**
      * Loads and outputs the view's markup
      *
-     * @param $view string  The slug of the view
      * @return void
      */
     public function output_view(  )

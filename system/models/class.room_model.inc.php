@@ -11,13 +11,16 @@ class Room_Model extends Model
     /**
      * Saves a new room to the database
      *
-     * @return  void
+     * @param   $presenter  string  The name of the presenter
+     * @param   $email      string  The presenter's email address
+     * @param   $name       string  The name of the room
+     * @return              array   An array of data about the room
      */
-    public function create_room(  )
+    public function create_room( $presenter, $email, $name )
     {
-        $presenter = $this->sanitize($_POST['presenter-name']);
-        $email = $this->sanitize($_POST['presenter-email']);
-        $name = $this->sanitize($_POST['session-name']);
+        $presenter = $this->sanitize($presenter);
+        $email     = $this->sanitize($email);
+        $name      = $this->sanitize($name);
 
         // Creates a new room
         $sql = 'INSERT INTO rooms (name) VALUES (:name)';
@@ -58,22 +61,20 @@ class Room_Model extends Model
         $stmt->execute();
         $stmt->closeCursor();
 
-        // Makes the creator of this room its presenter
-        setcookie('presenter_room_' . $room_id, 1, time() + 2592000, '/');
-
-        // Sends the presenter to the newly created room
-        header("Location: ./room/" . $room_id);
-        exit;
+        return array(
+            'room_id' => $room_id,
+        );
     }
 
     /**
-     * Sends an attendee to a given room if it exists
+     * Checks if a given room exists
      *
-     * @return  void
+     * @param   $room_id    int     The ID of the room being checked
+     * @return              bool    Whether or not the room exists
      */
-    public function join_room(  )
+    public function room_exists( $room_id )
     {
-        $room_id = $this->sanitize($_POST['room_id']);
+        $room_id = $this->sanitize($room_id);
 
         // Loads the number of rooms matching the provided room ID
         $sql = "SELECT COUNT(id) AS the_count FROM rooms WHERE id = :room_id";
@@ -83,26 +84,17 @@ class Room_Model extends Model
         $room_exists = (bool) $stmt->fetch(PDO::FETCH_OBJ)->the_count;
         $stmt->closeCursor();
 
-        // If the room exists, creates the URL; otherwise, sends to a 404
-        if ($room_exists) {
-            $header = './room/' . $room_id;
-        } else {
-            $header = './no-room';
-        }
-
-        header("Location: " . $header);
-        exit;
+        return $room_exists;
     }
 
     /**
      * Sets a given room's status to "open"
      *
-     * @return  array   The ID of the room
+     * @param   $room_id    int     The ID of the room being checked
+     * @return              array   An array of data about the room
      */
-    public function open_room(  )
+    public function open_room( $room_id )
     {
-        $room_id = (int) $_POST['room_id'];
-
         $sql = "UPDATE rooms SET is_active=1 WHERE id = :room_id";
         $stmt = self::$db->prepare($sql);
         $stmt->bindParam(':room_id', $room_id, PDO::PARAM_INT);
@@ -117,12 +109,11 @@ class Room_Model extends Model
     /**
      * Sets a given room's status to "closed"
      *
-     * @return  array   The ID of the room
+     * @param   $room_id    int     The ID of the room being checked
+     * @return              array   An array of data about the room
      */
-    public function close_room(  )
+    public function close_room( $room_id )
     {
-        $room_id = (int) $_POST['room_id'];
-
         $sql = "UPDATE rooms SET is_active=0 WHERE id = :room_id";
         $stmt = self::$db->prepare($sql);
         $stmt->bindParam(':room_id', $room_id, PDO::PARAM_INT);
@@ -137,8 +128,8 @@ class Room_Model extends Model
     /**
      * Retrieves details about a given room
      *
-     * @param   $room_id    int     The ID of the room
-     * @return              array   The room's data
+     * @param   $room_id    int     The ID of the room being checked
+     * @return              array   An array of data about the room
      */
     public function get_room_data( $room_id )
     {
