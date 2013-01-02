@@ -42,20 +42,24 @@ abstract class Controller
         return self::$nonce;
     }
 
+    /**
+     * Checks for a valid nonce
+     *
+     * @return bool     TRUE if the nonce is valid; otherwise FALSE
+     */
     protected function check_nonce(  )
     {
-        if (
-            isset($_SESSION['nonce']) && !empty($_SESSION['nonce']) 
+        return isset($_SESSION['nonce']) && !empty($_SESSION['nonce']) 
             && isset($_POST['nonce']) && !empty($_POST['nonce']) 
-            && $_SESSION['nonce']===$_POST['nonce']
-        ) {
-            return TRUE;
-        } else {
-            throw new Exception('Invalid nonce.');
-            
-        }
+            && $_SESSION['nonce']===$_POST['nonce'];
     }
 
+    /**
+     * Handles form submissions
+     *
+     * @param   $action string  The form action being performed
+     * @return          void
+     */
     protected function handle_form_submission( $action )
     {
         if ($this->check_nonce()) {
@@ -75,6 +79,9 @@ abstract class Controller
 
             header('Location: ' . APP_URI . 'room/' . $room_id);
             exit;
+        } else {
+            throw new Exception('Invalid nonce.');
+            
         }
     }
 
