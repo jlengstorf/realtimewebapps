@@ -9,7 +9,7 @@
     </p>
 
     <p>
-        <a href="./">&larr; go back to the home page</a>
+        <a href="<?php echo APP_URI; ?>">&larr; go back to the home page</a>
     </p>
 
 </section>

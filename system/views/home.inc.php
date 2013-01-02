@@ -2,7 +2,7 @@
 <section>
 
     <form id="attending" method="post" 
-          action="<?php echo FORM_ACTION; ?>">
+          action="<?php echo $join_action; ?>">
         <h2>Attending?</h2>
         <p>Join a room using its ID.</p>
         <label>
@@ -10,13 +10,12 @@
             <input type="text" name="room_id" />
         </label>
         <input type="submit" value="Join This Room" />
-        <input type="hidden" name="action" value="room-join" />
         <input type="hidden" name="nonce" 
                value="<?php echo $nonce; ?>" />
     </form><!--/#attending-->
 
     <form id="presenting" method="post" 
-          action="<?php echo FORM_ACTION; ?>">
+          action="<?php echo $create_action; ?>">
         <h2>Presenting?</h2>
         <p>Create a room to start your Q&amp;A session.</p>
         <label>
@@ -32,7 +31,6 @@
             <input type="text" name="session-name" />
         </label>
         <input type="submit" value="Create Your Room" />
-        <input type="hidden" name="action" value="room-create" />
         <input type="hidden" name="nonce" 
                value="<?php echo $nonce; ?>" />
     </form><!--/#presenting-->
