@@ -17,9 +17,9 @@ define('APP_PATH',   dirname(__FILE__));
 // App folder, relative from web root (i.e. /realtime)
 define('APP_FOLDER', dirname($_SERVER['SCRIPT_NAME']));
 
-// URL path to the app (i.e. http://example.org/realtime)
+// URI path to the app (i.e. http://example.org/realtime)
 define(
-    'APP_URL', 
+    'APP_URI', 
     remove_double_slashes('http://' . $_SERVER['SERVER_NAME'] . APP_FOLDER)
 );
 
@@ -42,6 +42,9 @@ if (!isset($_SESSION)) {
 // Loads the configuration variables
 require_once SYS_PATH . '/config/config.inc.php';
 
+// Loads Pusher
+require_once SYS_PATH . '/lib/Pusher.php';
+
 // Turns on error reporting if in debug mode
 if (DEBUG===TRUE) {
     ini_set('display_errors', 1);
@@ -54,17 +57,20 @@ if (DEBUG===TRUE) {
 // Sets the timezone to avoid a notice
 date_default_timezone_set(APP_TIMEZONE);
 
+// Registers class_loader() as the autoload function
+spl_autoload_register('class_autoloader');
+
 
 //-----------------------------------------------------------------------------
 // Loads and processes view data
 //-----------------------------------------------------------------------------
 
-// Parses the URL
-$url_array  = read_url();
-$class_name = get_controller_classname(&$url_array);
-$options    = $url_array;
+// Parses the URI
+$uri_array  = parse_uri();
+$class_name = get_controller_classname(&$uri_array);
+$options    = $uri_array;
 
-// Sets a default view if nothing is passed in the URL (i.e. on the home page)
+// Sets a default view if nothing is passed in the URI (i.e. on the home page)
 if (empty($class_name)) {
     $class_name = 'Home';
 }
@@ -97,44 +103,44 @@ require_once SYS_PATH . '/inc/footer.inc.php';
 //-----------------------------------------------------------------------------
 
 /**
- * Breaks the URL into an array at the slashes
+ * Breaks the URI into an array at the slashes
  *
- * @return array  The broken up URL
+ * @return array  The broken up URI
  */
-function read_url(  )
+function parse_uri(  )
 {
     // Removes any subfolders in which the app is installed
-    $real_url = preg_replace(
+    $real_uri = preg_replace(
             '~^'.APP_FOLDER.'~', 
             '', 
             $_SERVER['REQUEST_URI'], 
             1
         );
 
-    $url_array = explode('/', $real_url);
+    $uri_array = explode('/', $real_uri);
 
     // If the first element is empty, get rid of it
-    if (empty($url_array[0])) {
-        array_shift($url_array);
+    if (empty($uri_array[0])) {
+        array_shift($uri_array);
     }
 
     // If the last element is empty, get rid of it
-    if (empty($url_array[count($url_array)-1])) {
-        array_pop($url_array);
+    if (empty($uri_array[count($uri_array)-1])) {
+        array_pop($uri_array);
     }
 
-    return $url_array;
+    return $uri_array;
 }
 
 /**
- * Determines the controller name using the first element of the URL array
+ * Determines the controller name using the first element of the URI array
  *
- * @param $url_array array  The broken up URL
+ * @param $uri_array array  The broken up URI
  * @return string           The controller classname
  */
-function get_controller_classname( $url_array )
+function get_controller_classname( $uri_array )
 {
-    $controller = array_shift($url_array);
+    $controller = array_shift($uri_array);
     return ucfirst($controller);
 }
 
@@ -155,7 +161,7 @@ function remove_double_slashes( $dirty_path )
  * @param $class_name string    The name of the class to be loaded
  * @return bool                 Returns TRUE on success (Exception on failure)
  */
-function __autoload( $class_name )
+function class_autoloader( $class_name )
 {
     $fname = strtolower($class_name);
     

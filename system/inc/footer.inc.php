@@ -20,14 +20,14 @@
 <?php
 
 // Configures the Pusher channel if we're in a room
-$channel = !empty($url_array[0]) ? 'room_' . $url_array[0] : 'default';
+$channel = !empty($uri_array[0]) ? 'room_' . $uri_array[0] : 'default';
 
 ?>
 <script>
     var pusher  = new Pusher('<?php echo PUSHER_KEY; ?>'),
         channel = pusher.subscribe('<?php echo $channel; ?>');
 </script>
-<script src="<?php echo APP_URL; ?>assets/scripts/init.js"></script>
+<script src="<?php echo APP_URI; ?>assets/scripts/init.js"></script>
 
 </body>
 

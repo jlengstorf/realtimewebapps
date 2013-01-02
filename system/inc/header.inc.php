@@ -2,7 +2,7 @@
 
 // Replaces any double slashes that aren't part of the protocol
 $pattern    = '~(?<!:)//~';
-$dirty_path = APP_URL . '/assets/styles/main.css';
+$dirty_path = APP_URI . '/assets/styles/main.css';
 $css_path   = preg_replace($pattern, '/', $dirty_path);
 
 ?>
