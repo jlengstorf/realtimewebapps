@@ -3,7 +3,8 @@
 /**
  * Processes output for the Question view
  *
- * @author Jason Lengstorf <jason@lengstorf.com>
+ * @author  Jason Lengstorf <jason@lengstorf.com>
+ * @author  Phil Leggetter <phil@leggetter.co.uk>
  */
 class Question extends Controller
 {
@@ -19,15 +20,13 @@ class Question extends Controller
      */
     public function __construct( $options )
     {
-        if (!is_array($options)) {
-            throw new Exception("No options were supplied for the question.");
-        }
+        parent::__construct($options);
 
         $this->model = new Question_Model;
 
         // Checks for a form submission
         $this->actions = array(
-            'create' => 'create_question',
+            'ask'    => 'create_question',
             'vote'   => 'vote_question',
             'answer' => 'answer_question',
         );
@@ -91,11 +90,13 @@ class Question extends Controller
             }
 
             $view->vote_link = $this->output_vote_form(
+                $this->room_id,
                 $question->question_id,
                 $question->is_answered
             );
 
             $view->answer_link = $this->output_answer_form(
+                $this->room_id,
                 $question->question_id
             );
 
@@ -117,7 +118,7 @@ class Question extends Controller
         if ($is_active) {
             $view = new View('ask-form');
             $view->room_id     = $this->room_id;
-            $view->form_action = APP_URI . 'question/create';
+            $view->form_action = APP_URI . 'question/ask';
             $view->nonce       = $this->generate_nonce();
 
             return $view->render(FALSE);
@@ -136,20 +137,16 @@ class Question extends Controller
      * @param $answered     int     1 if answered, 0 if unanswered
      * @return              mixed   Markup if attendee, NULL if presenter
      */
-    protected function output_vote_form( $question_id, $answered )
+    protected function output_vote_form( $room_id, $question_id, $answered )
     {
-        if (!$this->is_presenter) {
-            $view = new View('question-vote');
-            $view->room_id     = $this->room_id;
-            $view->question_id = $question_id;
-            $view->form_action = APP_URI . 'question/vote';
-            $view->nonce       = $this->generate_nonce();
-            $view->disabled    = $answered==1 ? 'disabled' : NULL;
+        $view = new View('question-vote');
+        $view->room_id     = $room_id;
+        $view->question_id = $question_id;
+        $view->form_action = APP_URI . 'question/vote';
+        $view->nonce       = $this->generate_nonce();
+        $view->disabled    = $answered==1 ? 'disabled' : NULL;
 
-            return $view->render(FALSE);
-        }
-
-        return NULL;
+        return $view->render(FALSE);
     }
 
     /**
@@ -158,19 +155,15 @@ class Question extends Controller
      * @param $question_id  int     The ID of the question
      * @return              mixed   Markup if presenter, NULL if attendee
      */
-    protected function output_answer_form( $question_id )
+    protected function output_answer_form( $room_id, $question_id )
     {
-        if ($this->is_presenter) {
-            $view = new View('question-answer');
-            $view->room_id     = $this->room_id;
-            $view->question_id = $question_id;
-            $view->form_action = APP_URI . 'question/answer';
-            $view->nonce       = $this->generate_nonce();
+        $view = new View('question-answer');
+        $view->room_id     = $room_id;
+        $view->question_id = $question_id;
+        $view->form_action = APP_URI . 'question/answer';
+        $view->nonce       = $this->generate_nonce();
 
-            return $view->render(FALSE);
-        }
-
-        return NULL;
+        return $view->render(FALSE);
     }
 
     /**
@@ -197,7 +190,30 @@ class Question extends Controller
 
         // Make sure valid output was returned
         if (is_array($output) && isset($output['question_id'])) {
+            $room_id     = $output['room_id'];
             $question_id = $output['question_id'];
+
+            // Generates markup for the question (for realtime addition)
+            $view = new View('question');
+            $view->question       = $question;
+            $view->room_id        = $room_id;
+            $view->question_id    = $question_id;
+            $view->vote_count     = 1;
+            $view->answered_class = NULL;
+            $view->voted_class    = NULL;
+
+            $view->vote_link = $this->output_vote_form(
+                $room_id, 
+                $question_id, 
+                FALSE
+            );
+
+            $view->answer_link = $this->output_answer_form(
+                $room_id,
+                $question_id
+            );
+
+            $output['markup'] = $view->render(FALSE);
         } else {
             throw new Exception('Error creating the room.');
         }
@@ -225,6 +241,8 @@ class Question extends Controller
 
             // Sets a cookie to make it harder to post multiple votes
             setcookie($cookie_id, 1, time() + 2592000, '/');
+        } else {
+            $output = array('room_id'=>$room_id);
         }
 
         return $output;
@@ -246,7 +264,7 @@ class Question extends Controller
             return $this->model->answer_question($room_id, $question_id);
         }
 
-        return NULL;
+        return array('room_id'=>$room_id);
     }
 
 }

@@ -186,11 +186,11 @@ section {
     overflow: hidden;
 }
 
-section#err404 {
+section#error {
     text-align: center;
 }
 
-section#err404 p {
+section#error p {
     margin: 0 auto 2em;
 }
 
@@ -316,15 +316,24 @@ form#ask-a-question,#questions {
     padding: 0.1em 0.75em;
 }
 
-#questions.closed,#questions .answered { opacity: .4; }
-
 #questions li {
     position: relative;
     list-style: none;
     margin: 0;
     padding: 1em 0 1em;
     overflow: hidden;
+    opacity: 1;
 }
+
+#questions li,#questions .vote {
+    -webkit-transition: opacity 1s ease-in-out;
+       -moz-transition: opacity 1s ease-in-out;
+        -ms-transition: opacity 1s ease-in-out;
+         -o-transition: opacity 1s ease-in-out;
+            transition: opacity 1s ease-in-out;
+}
+
+#questions.closed,#questions li.answered { opacity: .4; }
 
 #questions li:before {
     content: attr(data-count);
@@ -358,13 +367,12 @@ form#ask-a-question,#questions {
 #questions .answer {
     position: relative;
     float: right;
-    display: block;
+    display: none;
     width: 78px;
     height: 88px;
     margin: 0px 0 0;
     text-indent: -9999px;
     overflow: hidden;
-    background: url(../images/sprite.jpg) right top no-repeat;
 }
 
 #questions .vote {
@@ -377,26 +385,32 @@ form#ask-a-question,#questions {
     overflow: hidden;
 }
 
+#questions.presenter .answer { display: block; }
+#questions.presenter .vote { display: none; }
+
 #questions .vote input[type=submit],
 #questions .answer input[type=submit] {
     position: absolute;
     top: 0;
     left: 0;
     margin: 0;
-    width: 100%;
+    width: 78px;
     height: 100%;
     cursor: pointer;
     overflow: hidden;
     text-indent: -9999px;
     background: url(../images/sprite.jpg) left top no-repeat;
+    box-shadow: none;
 }
 
 #questions .voted .vote input[type=submit] {
     background-position: left bottom;
+    width: 78px;
 }
 
 #questions .answer input[type=submit] {
     background-position: right top;
+    width: 80px;
 }
 
 #questions.closed .vote,#questions .answered .vote { opacity: .2; }
@@ -531,14 +545,16 @@ form#ask-a-question,#questions {
 
     #questions.presenter li:before { 
         top: auto; 
-        right: 24px; 
-        bottom: 6px;
+        right: 44px; 
+        bottom: 2px;
         left: auto; 
     }
 
     #questions .vote { margin: 20px 0 0;}
 
-    #questions p { width: 210px; margin: 0; }
+    #questions p { width: 200px; margin: 1.125em 0 0; }
+
+    #questions.presenter p { float: none; }
 
     footer { margin-top: 3em; }
 
@@ -551,10 +567,89 @@ form#ask-a-question,#questions {
  *****************************************************************************/
 
 #questions li.new-vote {
+    -webkit-animation-name: vote;
+    -webkit-animation-duration: 0.5s;
+    -webkit-animation-timing-function: ease-in-out;
+    -webkit-animation-iteration-count: 2;
+    -webkit-animation-direction: normal;
+    -webkit-animation-delay: 0;
+    -webkit-animation-play-state: running;
+    -webkit-animation-fill-mode: forwards;
+
+    -moz-animation-name: vote;
+    -moz-animation-duration: 0.5s;
+    -moz-animation-timing-function: ease-in-out;
+    -moz-animation-iteration-count:2;
+    -moz-animation-direction: normal;
+    -moz-animation-delay: 0;
+    -moz-animation-play-state: running;
+    -moz-animation-fill-mode: forwards;
+    
+    -ms-animation-name: vote;
+    -ms-animation-duration: 0.5s;
+    -ms-animation-timing-function: ease-in-out;
+    -ms-animation-iteration-count: 2;
+    -ms-animation-direction: normal;
+    -ms-animation-delay: 0;
+    -ms-animation-play-state: running;
+    -ms-animation-fill-mode: forwards;
+
     animation-name: vote;
-    animation-duration: 1s;
+    animation-duration: 0.5s;
     animation-timing-function: ease-in-out;
-    animation-iteration-count: 1;
+    animation-iteration-count: 2;
+    animation-direction: normal;
+    animation-delay: 0;
+    animation-play-state: running;
+    animation-fill-mode: forwards;
+}
+
+@-webkit-keyframes vote {
+
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: .4;
+    }
+
+    100% {
+        opacity: 1;
+    }
+
+}
+
+@-moz-keyframes vote {
+
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: .4;
+    }
+
+    100% {
+        opacity: 1;
+    }
+
+}
+
+@-ms-keyframes vote {
+
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: .4;
+    }
+
+    100% {
+        opacity: 1;
+    }
+
 }
 
 @keyframes vote {

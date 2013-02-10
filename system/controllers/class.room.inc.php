@@ -3,7 +3,8 @@
 /**
  * Processes output for the Room view
  *
- * @author Jason Lengstorf <jason@lengstorf.com>
+ * @author  Jason Lengstorf <jason@lengstorf.com>
+ * @author  Phil Leggetter <phil@leggetter.co.uk>
  */
 class Room extends Controller
 {
@@ -20,9 +21,7 @@ class Room extends Controller
      */
     public function __construct( $options )
     {
-        if (!is_array($options)) {
-            throw new Exception("No options were supplied for the room.");
-        }
+        parent::__construct($options);
 
         $this->model = new Room_Model;
 

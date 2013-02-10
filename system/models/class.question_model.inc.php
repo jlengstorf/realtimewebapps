@@ -3,7 +3,8 @@
 /**
  * Creates database interaction methods for questions
  *
- * @author Jason Lengstorf <jason@lengstorf.com>
+ * @author  Jason Lengstorf <jason@lengstorf.com>
+ * @author  Phil Leggetter <phil@leggetter.co.uk>
  */
 class Question_Model extends Model
 {
@@ -149,5 +150,33 @@ class Question_Model extends Model
 
         return $questions;
     }
+
+    /**
+     * Loads a question by its ID
+     *
+     * @param   $question_id    int     The ID of the question
+     * @return                  array   The question data
+     */
+    // public function get_question( $question_id )
+    // {
+    //     $sql = "SELECT
+    //                 id AS question_id, 
+    //                 room_id, 
+    //                 question, 
+    //                 is_answered, 
+    //                 vote_count 
+    //             FROM questions
+    //                 LEFT JOIN question_votes
+    //                     ON( questions.id = question_votes.question_id )
+    //             WHERE id = :question_id
+    //             LIMIT 1";
+    //     $stmt = self::$db->prepare($sql);
+    //     $stmt->bindParam(':question_id', $question_id, PDO::PARAM_INT);
+    //     $stmt->execute();
+    //     $question = $stmt->fetch(PDO::FETCH_OBJ);
+    //     $stmt->closeCursor();
+
+    //     return $question;
+    // }
 
 }

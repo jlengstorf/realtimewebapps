@@ -3,7 +3,8 @@
 /**
  * Creates database interaction methods for rooms
  *
- * @author Jason Lengstorf <jason@lengstorf.com>
+ * @author  Jason Lengstorf <jason@lengstorf.com>
+ * @author  Phil Leggetter <phil@leggetter.co.uk>
  */
 class Room_Model extends Model
 {

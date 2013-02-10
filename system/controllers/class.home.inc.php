@@ -3,10 +3,21 @@
 /**
  * Generates output for the Home view
  *
- * @author Jason Lengstorf <jason@lengstorf.com>
+ * @author  Jason Lengstorf <jason@lengstorf.com>
+ * @author  Phil Leggetter <phil@leggetter.co.uk>
  */
 class Home extends Controller
 {
+
+    /**
+     * Overrides the parent constructor to avoid an error
+     *
+     * @return bool TRUE
+     */
+    public function __construct(  )
+    {
+        return TRUE;
+    }
 
     /**
      * Generates the title of the page
