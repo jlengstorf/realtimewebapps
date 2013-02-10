@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8" />
+        <title>Realtime Web Apps &ndash; Exercise 3-1</title>
+    </head>
+
+    <body>
+
+        <h1>Testing Pusher</h1>
+        <p>
+            This is a simple demo of how easy it is to integrate Pusher 
+            into an application.
+        </p>
+
+        <script src="http://js.pusher.com/1.12/pusher.min.js"></script>
+        <script type="text/javascript">
+            // Enable pusher logging - don't include this in production
+            Pusher.log = function(message) {
+                if (window.console && window.console.log) 
+                    window.console.log(message);
+            };
+
+            // Flash fallback logging - don't include this in production
+            WEB_SOCKET_DEBUG = true;
+
+            var pusher = new Pusher('1507a86011e47d3d00ad');
+            var channel = pusher.subscribe('test_channel');
+            channel.bind('my_event', function(data) {
+                alert(data);
+            });
+        </script>
+
+    </body>
+
+</html>
