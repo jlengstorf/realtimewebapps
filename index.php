@@ -4,6 +4,7 @@
  * The initialization script for the app
  *
  * @author  Jason Lengstorf <jason@lengstorf.com>
+ * @author  Phil Leggetter <phil@leggetter.co.uk>
  */
 
 
@@ -25,9 +26,6 @@ define(
 
 // Server path to the system folder (for includes)
 define('SYS_PATH',   APP_PATH . '/system');
-
-// Relative path to the form processing script (i.e. /realtime/process.php)
-define('FORM_ACTION', remove_double_slashes(APP_FOLDER . '/process.php'));
 
 
 //-----------------------------------------------------------------------------
@@ -79,8 +77,8 @@ if (empty($class_name)) {
 try {
     $controller = new $class_name($options);
 } catch (Exception $e) {
-    header('HTTP/1.0 404 Not Found');
-    $controller = new Notfound($options);
+    $options[1] = $e->getMessage();
+    $controller = new Error($options);
 }
 
 // Loads the <title> tag value for the view
@@ -169,7 +167,7 @@ function class_autoloader( $class_name )
     $possible_locations = array(
         SYS_PATH . '/models/class.' . $fname . '.inc.php',
         SYS_PATH . '/controllers/class.' . $fname . '.inc.php',
-        SYS_PATH . '/helper/class.' . $fname . '.inc.php',
+        SYS_PATH . '/core/class.' . $fname . '.inc.php',
     );
 
     // Loops through the location array and checks for a file to load

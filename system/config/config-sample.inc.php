@@ -6,6 +6,7 @@
  * The variables below need to be filled out with environment specific data.
  *
  * @author  Jason Lengstorf <jason@lengstorf.com>
+ * @author  Phil Leggetter <phil@leggetter.co.uk>
  */
 
 

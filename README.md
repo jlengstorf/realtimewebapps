@@ -3,30 +3,30 @@ Realtime Q&A
 
 A live feedback system for classrooms, presentations, and conferences.
 
-_(This is the proof-of-concept application for_ Realtime Web Apps: HTML5 Websockets, Pusher, and the Web's Next Big Thing _[Apress 2012].)_
-
-Installation
-------------
-
-*Installation instructions pending.*
+_(This is the proof-of-concept application for_ Realtime Web Apps: HTML5 Websockets, Pusher, and the Web's Next Big Thing _[Apress 2013]. It is not intended for production use.)_
 
 Documentation
 -------------
 
 For documentation, [read the book][1].
 
-Author
-------
+Authors
+-------
 
-*Jason Lengstorf*
+Jason Lengstorf (@jlengstorf)
 
-* http://jleng.com
+* http://www.lengstorf.com
+* http://twitter.com/jlengstorf
+
+Phil Leggetter (@leggetter)
+
+* http://www.leggetter.co.uk
 * http://twitter.com/jlengstorf
 
 Copyright  and license
 ----------------------
 
-Copyright (c) 2012 Jason Lengstorf
+Copyright (c) 2013 Jason Lengstorf & Phil Leggetter
 
 Released under the [MIT License][2].
 
