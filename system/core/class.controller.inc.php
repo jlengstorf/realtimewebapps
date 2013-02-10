@@ -3,7 +3,8 @@
 /**
  * An abstract class that lays the groundwork for all controllers
  *
- * @author Jason Lengstorf <jason@lengstorf.com>
+ * @author  Jason Lengstorf <jason@lengstorf.com>
+ * @author  Phil Leggetter <phil@leggetter.co.uk>
  */
 abstract class Controller
 {
@@ -21,8 +22,10 @@ abstract class Controller
      */
     public function __construct( $options )
     {
-        if (!is_array($options)) {
-            throw new Exception("No options were supplied for the room.");
+        if (!is_array($options) || !isset($options[0])) {
+            throw new Exception(
+                "No options were supplied for the controller."
+            );
         }
     }
 
@@ -49,9 +52,16 @@ abstract class Controller
      */
     protected function check_nonce(  )
     {
-        return isset($_SESSION['nonce']) && !empty($_SESSION['nonce']) 
+        if (
+            isset($_SESSION['nonce']) && !empty($_SESSION['nonce']) 
             && isset($_POST['nonce']) && !empty($_POST['nonce']) 
-            && $_SESSION['nonce']===$_POST['nonce'];
+            && $_SESSION['nonce']===$_POST['nonce']
+        ) {
+            $_SESSION['nonce'] = NULL;
+            return TRUE;
+        } else {
+            return FALSE;
+        }
     }
 
     /**
@@ -68,12 +78,11 @@ abstract class Controller
             if (is_array($output) && isset($output['room_id'])) {
                 $room_id = $output['room_id'];
             } else {
-                echo '<pre>Method: ', $this->actions[$action], "\n", print_r($output, TRUE), '</pre>';
                 throw new Exception('Something went wrong.');
             }
 
             // Realtime stuff happens here
-            $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_APPID);
+            $pusher  = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_APPID);
             $channel = 'room_' . $room_id;
             $pusher->trigger($channel, $action, $output);
 
@@ -81,7 +90,6 @@ abstract class Controller
             exit;
         } else {
             throw new Exception('Invalid nonce.');
-            
         }
     }
 

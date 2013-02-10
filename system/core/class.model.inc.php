@@ -3,7 +3,8 @@
 /**
  * Creates a set of generic database interaction methods
  *
- * @author Jason Lengstorf <jason@lengstorf.com>
+ * @author  Jason Lengstorf <jason@lengstorf.com>
+ * @author  Phil Leggetter <phil@leggetter.co.uk>
  */
 abstract class Model
 {

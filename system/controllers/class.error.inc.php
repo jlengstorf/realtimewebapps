@@ -3,10 +3,12 @@
 /**
  * Processes output for the Room view
  *
- * @author Jason Lengstorf <jason@lengstorf.com>
+ * @author  Jason Lengstorf <jason@lengstorf.com>
+ * @author  Phil Leggetter <phil@leggetter.co.uk>
  */
-class Notfound extends Controller
+class Error extends Controller
 {
+    public $message = NULL;
 
     /**
      * Initializes the view
@@ -16,8 +18,8 @@ class Notfound extends Controller
      */
     public function __construct( $options )
     {
-        if (!is_array($options)) {
-            throw new Exception("No options were supplied for the room.");
+        if (isset($options[1])) {
+            $this->message = $options[1];
         }
     }
 
@@ -28,7 +30,7 @@ class Notfound extends Controller
      */
     public function get_title(  )
     {
-        return '404 Not Found';
+        return 'Something went wrong.';
     }
 
     /**
@@ -38,7 +40,8 @@ class Notfound extends Controller
      */
     public function output_view(  )
     {
-        $view = new View('notfound');
+        $view = new View('error');
+        $view->message = $this->message;
 
         $view->render();
     }

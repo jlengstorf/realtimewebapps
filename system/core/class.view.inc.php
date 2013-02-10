@@ -3,7 +3,8 @@
 /**
  * Parses template files with loaded data to output HTML markup
  *
- * @author Jason Lengstorf <jason@lengstorf.com>
+ * @author  Jason Lengstorf <jason@lengstorf.com>
+ * @author  Phil Leggetter <phil@leggetter.co.uk>
  */
 class View
 {
