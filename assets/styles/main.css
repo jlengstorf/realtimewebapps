@@ -29,12 +29,11 @@ body {
     letter-spacing: .06em;
 }
 
-h1,h2,h3,#questions li:before {
+h1,h2,h3 {
     font-family: 'Cooper Black W01';
     font-weight: normal;
+    text-shadow: 0 0 10px rgba(31, 27, 12, .3);
 }
-
-h2,h3 { text-shadow: 0 0 10px rgba(31, 27, 12, .3); }
 
 h1 {
     margin: 0;
@@ -65,14 +64,6 @@ p {
     padding: 0 6em;
 }
 
-.tagline {
-    font-family: 'NewsGothicNo.2W01-Light 710401';
-    font-size: 1.1em;
-    line-height: 1em;
-    color: #fbf7e7;
-    letter-spacing: .12em;
-}
-
 a {
     font-family: 'NewsGothicNo.2W01-Mediu 710407';
     color: #e06f00;
@@ -82,6 +73,14 @@ a {
 a:active,a:hover,a:focus {
     text-decoration: underline;
     outline: none;
+}
+
+.tagline {
+    font-family: 'NewsGothicNo.2W01-Light 710401';
+    font-size: 1.1em;
+    line-height: 1em;
+    color: #fbf7e7;
+    letter-spacing: .12em;
 }
 
 form p {
@@ -128,6 +127,10 @@ section header h2 {
     letter-spacing: .1em;
 }
 
+#questions li:before {
+    font-family: 'Cooper Black W01';
+}
+
 footer li {
     font-family: 'NewsGothicNo.2W01-Light 710401';
     font-size: .75em;
@@ -151,7 +154,9 @@ body { margin: 0; }
 
 header,footer,input,li:after {
     -webkit-box-shadow: 0 0 10px rgba(31, 27, 12, .3);
-            box-shadow: 0 0 10px rgba(31, 27, 12, .3);
+    -moz-box-shadow: 0 0 10px rgba(31, 27, 12, .3);
+    -o-box-shadow: 0 0 10px rgba(31, 27, 12, .3);
+    box-shadow: 0 0 10px rgba(31, 27, 12, .3);
 }
 
 header,footer {
@@ -181,11 +186,11 @@ section {
     overflow: hidden;
 }
 
-section#err404 {
+section#error {
     text-align: center;
 }
 
-section#err404 p {
+section#error p {
     margin: 0 auto 2em;
 }
 
@@ -210,6 +215,13 @@ input {
     padding: .375em .875em;
 }
 
+input:active,input:hover,input:focus {
+    background-color: #e06f00;
+    outline: none;
+}
+
+input::-moz-focus-inner { border: 0; }
+
 label input {
     display: block;
     width: 400px;
@@ -217,17 +229,15 @@ label input {
     padding: .375em 15px;
     border: 2px solid #1f1b0c;
     -webkit-border-radius: 6px;
-            border-radius: 6px;
+    -moz-border-radius: 6px;
+    -o-border-radius: 6px;
+    border-radius: 6px;
     -webkit-box-shadow: inset 2px 2px 14px rgba(31, 27, 12, .3);
-            box-shadow: inset 2px 2px 14px rgba(31, 27, 12, .3);
+    -moz-box-shadow: inset 2px 2px 14px rgba(31, 27, 12, .3);
+    -o-box-shadow: inset 2px 2px 14px rgba(31, 27, 12, .3);
+    -ms-box-shadow: inset 2px 2px 14px rgba(31, 27, 12, .3);
+    box-shadow: inset 2px 2px 14px rgba(31, 27, 12, .3);
 }
-
-input:active,input:hover,input:focus {
-    background-color: #e06f00;
-    outline: none;
-}
-
-input::-moz-focus-inner { border: 0; }
 
 label input:active,label input:focus {
     border-color: #e06f00;
@@ -312,11 +322,18 @@ form#ask-a-question,#questions {
     margin: 0;
     padding: 1em 0 1em;
     overflow: hidden;
-    -webkit-box-shadow: 0  12px 16px -16px rgba(31, 27, 12, .3),
-                        0 -12px 16px -16px rgba(31, 27, 12, .3);
-            box-shadow: 0  12px 16px -16px rgba(31, 27, 12, .3),
-                        0 -12px 16px -16px rgba(31, 27, 12, .3);
+    opacity: 1;
 }
+
+#questions li,#questions .vote {
+    -webkit-transition: opacity 1s ease-in-out;
+       -moz-transition: opacity 1s ease-in-out;
+        -ms-transition: opacity 1s ease-in-out;
+         -o-transition: opacity 1s ease-in-out;
+            transition: opacity 1s ease-in-out;
+}
+
+#questions.closed,#questions li.answered { opacity: .4; }
 
 #questions li:before {
     content: attr(data-count);
@@ -324,6 +341,19 @@ form#ask-a-question,#questions {
     left: 0;
     top: 50%;
     margin-top: -.5em;
+}
+
+#questions li:after {
+    content: ' ';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    display: block;
+    width: 500px;
+    height: 2px;
+    margin-left: -250px;
+    background-color: #d9d4c3;
+    opacity: .6;
 }
 
 #questions p {
@@ -334,41 +364,56 @@ form#ask-a-question,#questions {
     text-align: left;
 }
 
-#questions .vote,#questions .answer {
+#questions .answer {
+    position: relative;
+    float: right;
+    display: none;
+    width: 78px;
+    height: 88px;
+    margin: 0px 0 0;
+    text-indent: -9999px;
+    overflow: hidden;
+}
+
+#questions .vote {
     position: relative;
     display: block;
     width: 76px;
     height: 76px;
     margin: 0 0 0 2em;
-    padding: 0;
+    text-indent: -9999px;
     overflow: hidden;
 }
 
-#questions .answer {
-    float: right;
-    width: 78px;
-    height: 88px;
-    margin: 0;
-}
+#questions.presenter .answer { display: block; }
+#questions.presenter .vote { display: none; }
 
 #questions .vote input[type=submit],
 #questions .answer input[type=submit] {
-    width: 100%;
-    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
     margin: 0;
-    padding: 0;
+    width: 78px;
+    height: 100%;
     cursor: pointer;
+    overflow: hidden;
     text-indent: -9999px;
     background: url(../images/sprite.jpg) left top no-repeat;
-    -webkit-box-shadow: none;
-            box-shadow: none;
+    box-shadow: none;
 }
 
 #questions .voted .vote input[type=submit] {
     background-position: left bottom;
+    width: 78px;
 }
 
-#questions .answer input[type=submit] { background-position: right top; }
+#questions .answer input[type=submit] {
+    background-position: right top;
+    width: 80px;
+}
+
+#questions.closed .vote,#questions .answered .vote { opacity: .2; }
 
 #questions .answer input:active,
 #questions .answer input:hover,
@@ -381,10 +426,6 @@ form#ask-a-question,#questions {
 #questions .vote input:focus {
     background-position: left bottom;
 }
-
-#questions.closed,#questions .answered { opacity: .4; }
-
-#questions.closed .vote,#questions .answered .vote { opacity: .2; }
 
 #questions.closed .vote input:active,
 #questions.closed .vote input:hover,
@@ -400,10 +441,12 @@ form#ask-a-question,#questions {
     cursor: default;
 }
 
-#close-this-room { width: 340px; margin: 2em 0 0; }
+#close-this-room {
+    width: 340px;
+    margin: 2em 0 0;
+}
 
 #close-this-room label input { width: 305px; }
-
 
 @media screen and (max-width: 960px)
 {
@@ -461,16 +504,13 @@ form#ask-a-question,#questions {
 
 }
 
-
 @media screen and (max-width: 768px)
 {
 
-    header h1,header p {
-        width: 90%;
-        min-width: 300px;
+    header h1,header p,section,section header,form#ask-a-question,
+    #questions {
+        width: 300px;
     }
-
-    section,section header,form#ask-a-question,#questions { width: 300px; }
 
     header { padding-bottom: .75em; }
 
@@ -501,22 +541,129 @@ form#ask-a-question,#questions {
 
     #questions li { font-size: 1.125em; line-height: 1.125em; }
 
-    #questions li:before { top: 20px; left: 24px; margin-top: 0; }
+    #questions li:before { top: 20px; left: 24px; margin-top: 0;}
 
     #questions.presenter li:before { 
         top: auto; 
-        right: 24px; 
-        bottom: 6px;
-        left: auto;
-        z-index: 10;
+        right: 44px; 
+        bottom: 2px;
+        left: auto; 
     }
 
     #questions .vote { margin: 20px 0 0;}
 
-    #questions p { width: 210px; margin: 0; }
+    #questions p { width: 200px; margin: 1.125em 0 0; }
+
+    #questions.presenter p { float: none; }
 
     footer { margin-top: 3em; }
 
     footer ul { width: 300px; }
+
+}
+
+/*
+ * ANIMATION
+ *****************************************************************************/
+
+#questions li.new-vote {
+    -webkit-animation-name: vote;
+    -webkit-animation-duration: 0.5s;
+    -webkit-animation-timing-function: ease-in-out;
+    -webkit-animation-iteration-count: 2;
+    -webkit-animation-direction: normal;
+    -webkit-animation-delay: 0;
+    -webkit-animation-play-state: running;
+    -webkit-animation-fill-mode: forwards;
+
+    -moz-animation-name: vote;
+    -moz-animation-duration: 0.5s;
+    -moz-animation-timing-function: ease-in-out;
+    -moz-animation-iteration-count:2;
+    -moz-animation-direction: normal;
+    -moz-animation-delay: 0;
+    -moz-animation-play-state: running;
+    -moz-animation-fill-mode: forwards;
+    
+    -ms-animation-name: vote;
+    -ms-animation-duration: 0.5s;
+    -ms-animation-timing-function: ease-in-out;
+    -ms-animation-iteration-count: 2;
+    -ms-animation-direction: normal;
+    -ms-animation-delay: 0;
+    -ms-animation-play-state: running;
+    -ms-animation-fill-mode: forwards;
+
+    animation-name: vote;
+    animation-duration: 0.5s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: 2;
+    animation-direction: normal;
+    animation-delay: 0;
+    animation-play-state: running;
+    animation-fill-mode: forwards;
+}
+
+@-webkit-keyframes vote {
+
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: .4;
+    }
+
+    100% {
+        opacity: 1;
+    }
+
+}
+
+@-moz-keyframes vote {
+
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: .4;
+    }
+
+    100% {
+        opacity: 1;
+    }
+
+}
+
+@-ms-keyframes vote {
+
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: .4;
+    }
+
+    100% {
+        opacity: 1;
+    }
+
+}
+
+@keyframes vote {
+
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: .4;
+    }
+
+    100% {
+        opacity: 1;
+    }
 
 }

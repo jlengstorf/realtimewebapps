@@ -7,12 +7,12 @@
 
 <title>Realtime Q&amp;A</title>
 
-<!-- Custom fonts via fonts.com -->
+<!-- Fonts via fonts.com -->
 <link rel="stylesheet" 
       href="http://fast.fonts.com/cssapi/6a912a6e-163c-4c8b-afe0-e3d22ffab02e.css" />
 
 <!-- Main site styles -->
-<link rel="stylesheet" href="./assets/styles/main.css" />
+<link rel="stylesheet" href="http://realtime.local/assets/styles/main.css" />
 
 </head>
 
@@ -29,14 +29,10 @@
 
     <form id="attending">
         <h2>Attending?</h2>
-        <p>Join a room using its 4-character ID.</p>
+        <p>Join a room using its ID.</p>
         <label>
-            Tell us your name (so we know who you are).
-            <input type="text" name="attendee-name" />
-        </label>
-        <label>
-            What is your session's ID?
-            <input type="text" name="session-id" />
+            What is the room's ID?
+            <input type="text" name="room_id" />
         </label>
         <input type="submit" value="Join This Room" />
     </form><!--/#attending-->
@@ -64,7 +60,7 @@
 <footer>
     <ul>
         <li class="copyright">
-            &copy; 2012 Jason Lengstorf
+            &copy; 2013 Jason Lengstorf &amp; Phil Leggetter
         </li><!--/.copyright-->
         <li>
             Part of <em>Realtime Web Apps: HTML5 Websockets, Pusher, and the 

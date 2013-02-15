@@ -7,12 +7,12 @@
 
 <title>Realtime Q&amp;A</title>
 
-<!-- Custom fonts via fonts.com -->
+<!-- Fonts via fonts.com -->
 <link rel="stylesheet" 
       href="http://fast.fonts.com/cssapi/6a912a6e-163c-4c8b-afe0-e3d22ffab02e.css" />
 
 <!-- Main site styles -->
-<link rel="stylesheet" href="./assets/styles/main.css" />
+<link rel="stylesheet" href="http://realtime.local/assets/styles/main.css" />
 
 </head>
 
@@ -33,30 +33,50 @@
             Presented by Jason Lengstorf 
             (<a href="mailto:jason@lengstorf.com" tabindex="100">email</a>)
         </p>
-        <form id="close-this-session">
+        
+        <form id="close-this-room">
             <label>
-                Link to your session.
-                <input type="text" name="session-url" 
-                       value="http://rwaapp.com/1234" disabled />
+                Link to your room.
+                <input type="text" name="room-url" 
+                       value="http://realtime.local/room/1234" 
+                       disabled />
             </label>
-            <input type="submit" value="End This Session" />
-        </form><!--/#close-this-session-->
+            <input type="submit" value="End This room" />
+        </form><!--/#close-this-room-->
+ 
     </header>
 
+     
+
     <ul id="questions" class="presenter">
-        <li data-id="1" data-count="27">
-            <a href="#" class="answer">Answer This Question</a>
+        
+        <li id="question-1" 
+            data-count="27">
+            
+            <form class="answer">
+                <input type="submit" value="Answer this question." />
+            </form> 
+ 
             <p>
                 What is the best way to implement realtime features today?
             </p>
+             
         </li>
-        <li data-id="2" data-count="14">
-            <a href="#" class="answer">Answer This Question</a>
+
+        <li id="question-2" 
+            data-count="14">
+            
+            <form class="answer">
+                <input type="submit" value="Answer this question." />
+            </form> 
+ 
             <p>
                 Does this work on browsers that don’t support the 
                 WebSockets API?
             </p>
+             
         </li>
+ 
     </ul><!--/#questions-->
 
 </section>
@@ -64,7 +84,7 @@
 <footer>
     <ul>
         <li class="copyright">
-            &copy; 2012 Jason Lengstorf
+            &copy; 2013 Jason Lengstorf &amp; Phil Leggetter
         </li><!--/.copyright-->
         <li>
             Part of <em>Realtime Web Apps: HTML5 Websockets, Pusher, and the 
