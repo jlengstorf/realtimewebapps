@@ -19,10 +19,6 @@ class Room_Model extends Model
      */
     public function create_room( $presenter, $email, $name )
     {
-        $presenter = $this->sanitize($presenter);
-        $email     = $this->sanitize($email);
-        $name      = $this->sanitize($name);
-
         // Creates a new room
         $sql = 'INSERT INTO rooms (name) VALUES (:name)';
         $stmt = self::$db->prepare($sql);
@@ -75,8 +71,6 @@ class Room_Model extends Model
      */
     public function room_exists( $room_id )
     {
-        $room_id = $this->sanitize($room_id);
-
         // Loads the number of rooms matching the provided room ID
         $sql = "SELECT COUNT(id) AS the_count FROM rooms WHERE id = :room_id";
         $stmt = self::$db->prepare($sql);
