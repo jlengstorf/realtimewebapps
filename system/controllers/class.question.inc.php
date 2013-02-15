@@ -107,6 +107,44 @@ class Question extends Controller
     }
 
     /**
+     * Generates the voting form for attendees
+     *
+     * @param $room_id      int     The ID of the room
+     * @param $question_id  int     The ID of the question
+     * @param $answered     int     1 if answered, 0 if unanswered
+     * @return              mixed   Markup if attendee, NULL if presenter
+     */
+    protected function output_vote_form( $room_id, $question_id, $answered )
+    {
+        $view = new View('question-vote');
+        $view->room_id     = $room_id;
+        $view->question_id = $question_id;
+        $view->form_action = APP_URI . 'question/vote';
+        $view->nonce       = $this->generate_nonce();
+        $view->disabled    = $answered==1 ? 'disabled' : NULL;
+
+        return $view->render(FALSE);
+    }
+
+    /**
+     * Generates the answering form for presenter
+     *
+     * @param $room_id      int     The ID of the room
+     * @param $question_id  int     The ID of the question
+     * @return              mixed   Markup if presenter, NULL if attendee
+     */
+    protected function output_answer_form( $room_id, $question_id )
+    {
+        $view = new View('question-answer');
+        $view->room_id     = $room_id;
+        $view->question_id = $question_id;
+        $view->form_action = APP_URI . 'question/answer';
+        $view->nonce       = $this->generate_nonce();
+
+        return $view->render(FALSE);
+    }
+
+    /**
      * Generates the form to ask a new question
      *
      * @param  $is_active   bool    Whether or not the room is active
@@ -131,42 +169,6 @@ class Question extends Controller
     }
 
     /**
-     * Generates the voting form for attendees
-     *
-     * @param $question_id  int     The ID of the question
-     * @param $answered     int     1 if answered, 0 if unanswered
-     * @return              mixed   Markup if attendee, NULL if presenter
-     */
-    protected function output_vote_form( $room_id, $question_id, $answered )
-    {
-        $view = new View('question-vote');
-        $view->room_id     = $room_id;
-        $view->question_id = $question_id;
-        $view->form_action = APP_URI . 'question/vote';
-        $view->nonce       = $this->generate_nonce();
-        $view->disabled    = $answered==1 ? 'disabled' : NULL;
-
-        return $view->render(FALSE);
-    }
-
-    /**
-     * Generates the answering form for presenter
-     *
-     * @param $question_id  int     The ID of the question
-     * @return              mixed   Markup if presenter, NULL if attendee
-     */
-    protected function output_answer_form( $room_id, $question_id )
-    {
-        $view = new View('question-answer');
-        $view->room_id     = $room_id;
-        $view->question_id = $question_id;
-        $view->form_action = APP_URI . 'question/answer';
-        $view->nonce       = $this->generate_nonce();
-
-        return $view->render(FALSE);
-    }
-
-    /**
      * Loads questions for the room
      *
      * @return array   The question data as an array of objects
@@ -183,8 +185,8 @@ class Question extends Controller
      */
     protected function create_question(  )
     {
-        $room_id  = $_POST['room_id'];
-        $question = $_POST['new-question'];
+        $room_id  = $this->sanitize($_POST['room_id']);
+        $question = $this->sanitize($_POST['new-question']);
 
         $output = $this->model->create_question($room_id, $question);
 
@@ -231,8 +233,8 @@ class Question extends Controller
      */
     protected function vote_question(  )
     {
-        $room_id     = $_POST['room_id'];
-        $question_id = $_POST['question_id'];
+        $room_id     = $this->sanitize($_POST['room_id']);
+        $question_id = $this->sanitize($_POST['question_id']);
 
         // Makes sure the attendee hasn't already voted for this question
         $cookie_id = 'voted_for_' . $question_id;
@@ -255,8 +257,8 @@ class Question extends Controller
      */
     protected function answer_question(  )
     {
-        $room_id     = $_POST['room_id'];
-        $question_id = $_POST['question_id'];
+        $room_id     = $this->sanitize($_POST['room_id']);
+        $question_id = $this->sanitize($_POST['question_id']);
 
         // Makes sure the person answering the question is the presenter
         $cookie_id = 'presenter_room_' . $room_id;
