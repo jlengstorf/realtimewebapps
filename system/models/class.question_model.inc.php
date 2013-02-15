@@ -10,6 +10,34 @@ class Question_Model extends Model
 {
 
     /**
+     * Loads all questions for a given room
+     *
+     * @param   $room_id    int     The ID of the room
+     * @return              array   The questions attached to the room
+     */
+    public function get_room_questions( $room_id )
+    {
+        $sql = "SELECT
+                    id AS question_id, 
+                    room_id, 
+                    question, 
+                    is_answered, 
+                    vote_count 
+                FROM questions
+                    LEFT JOIN question_votes
+                        ON( questions.id = question_votes.question_id )
+                WHERE room_id = :room_id
+                ORDER BY is_answered, vote_count DESC";
+        $stmt = self::$db->prepare($sql);
+        $stmt->bindParam(':room_id', $room_id, PDO::PARAM_INT);
+        $stmt->execute();
+        $questions = $stmt->fetchAll(PDO::FETCH_OBJ);
+        $stmt->closeCursor();
+
+        return $questions;
+    }
+
+    /**
      * Stores a new question with all the proper associations
      *
      * @param   $room_id    int     The ID of the room
@@ -18,9 +46,6 @@ class Question_Model extends Model
      */
     public function create_question( $room_id, $question )
     {
-        $room_id  = $this->sanitize($room_id);
-        $question = $this->sanitize($question);
-
         // Stores the new question in the database
         $sql = "INSERT INTO questions (room_id, question) 
                 VALUES (:room_id, :question)";
@@ -59,9 +84,6 @@ class Question_Model extends Model
      */
     public function vote_question( $room_id, $question_id )
     {
-        $room_id     = $this->sanitize($room_id);
-        $question_id = $this->sanitize($question_id);
-
         // Increments the vote count for the question
         $sql = "UPDATE question_votes 
                 SET vote_count = vote_count+1 
@@ -78,26 +100,6 @@ class Question_Model extends Model
     }
 
     /**
-     * Returns the vote count for a given question
-     *
-     * @param   $question_id    int     The ID of the question
-     * @return                  int     The number of votes for the question
-     */
-    public function get_vote_count( $question_id )
-    {
-        $sql = "SELECT vote_count 
-                FROM question_votes 
-                WHERE question_id = :question_id";
-        $stmt = self::$db->prepare($sql);
-        $stmt->bindParam(':question_id', $question_id, PDO::PARAM_INT);
-        $stmt->execute();
-        $count = $stmt->fetch(PDO::FETCH_OBJ)->vote_count;
-        $stmt->closeCursor();
-
-        return $count;
-    }
-
-    /**
      * Marks a given question as answered
      *
      * @param   $room_id        int     The ID of the room
@@ -106,9 +108,6 @@ class Question_Model extends Model
      */
     public function answer_question( $room_id, $question_id )
     {
-        $room_id     = $this->sanitize($room_id);
-        $question_id = $this->sanitize($question_id);
-
         $sql = "UPDATE questions
                 SET is_answered = 1
                 WHERE id = :question_id";
@@ -122,61 +121,5 @@ class Question_Model extends Model
             'question_id' => $question_id,
         );
     }
-
-    /**
-     * Loads all questions for a given room
-     *
-     * @param   $room_id    int     The ID of the room
-     * @return              array   The questions attached to the room
-     */
-    public function get_room_questions( $room_id )
-    {
-        $sql = "SELECT
-                    id AS question_id, 
-                    room_id, 
-                    question, 
-                    is_answered, 
-                    vote_count 
-                FROM questions
-                    LEFT JOIN question_votes
-                        ON( questions.id = question_votes.question_id )
-                WHERE room_id = :room_id
-                ORDER BY is_answered, vote_count DESC";
-        $stmt = self::$db->prepare($sql);
-        $stmt->bindParam(':room_id', $room_id, PDO::PARAM_INT);
-        $stmt->execute();
-        $questions = $stmt->fetchAll(PDO::FETCH_OBJ);
-        $stmt->closeCursor();
-
-        return $questions;
-    }
-
-    /**
-     * Loads a question by its ID
-     *
-     * @param   $question_id    int     The ID of the question
-     * @return                  array   The question data
-     */
-    // public function get_question( $question_id )
-    // {
-    //     $sql = "SELECT
-    //                 id AS question_id, 
-    //                 room_id, 
-    //                 question, 
-    //                 is_answered, 
-    //                 vote_count 
-    //             FROM questions
-    //                 LEFT JOIN question_votes
-    //                     ON( questions.id = question_votes.question_id )
-    //             WHERE id = :question_id
-    //             LIMIT 1";
-    //     $stmt = self::$db->prepare($sql);
-    //     $stmt->bindParam(':question_id', $question_id, PDO::PARAM_INT);
-    //     $stmt->execute();
-    //     $question = $stmt->fetch(PDO::FETCH_OBJ);
-    //     $stmt->closeCursor();
-
-    //     return $question;
-    // }
 
 }
