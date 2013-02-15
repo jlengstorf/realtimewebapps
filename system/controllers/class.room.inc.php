@@ -43,7 +43,7 @@ class Room extends Controller
             }
         }
 
-        $this->room         = $this->get_room_data();
+        $this->room         = $this->model->get_room_data($this->room_id);
         $this->is_presenter = $this->is_presenter();
         $this->is_active    = (boolean) $this->room->is_active;
     }
@@ -90,21 +90,6 @@ class Room extends Controller
     }
 
     /**
-     * Loads and formats the questions for this room
-     *
-     * @return string   The marked up questions
-     */
-    protected function output_questions(  )
-    {
-        $controller = new Question(array($this->room_id));
-
-        // Allows for different output for presenters vs. attendees
-        $controller->is_presenter = $this->is_presenter;
-
-        return $controller->output_view();
-    }
-
-    /**
      * Shows the "ask a question" form or a notice that the room has ended
      *
      * @param $email string The presenter's email address
@@ -148,13 +133,28 @@ class Room extends Controller
     }
 
     /**
+     * Loads and formats the questions for this room
+     *
+     * @return string   The marked up questions
+     */
+    protected function output_questions(  )
+    {
+        $controller = new Question(array($this->room_id));
+
+        // Allows for different output for presenters vs. attendees
+        $controller->is_presenter = $this->is_presenter;
+
+        return $controller->output_view();
+    }
+
+    /**
      * Checks if a room exists and redirects the user appropriately
      *
      * @return void
      */
     protected function join_room(  )
     {
-        $room_id = $_POST['room_id'];
+        $room_id = $this->sanitize($_POST['room_id']);
 
         // If the room exists, creates the URL; otherwise, sends to a 404
         if ($this->model->room_exists($room_id)) {
@@ -174,9 +174,9 @@ class Room extends Controller
      */
     protected function create_room(  )
     {
-        $presenter = $_POST['presenter-name'];
-        $email     = $_POST['presenter-email'];
-        $name      = $_POST['session-name'];
+        $presenter = $this->sanitize($_POST['presenter-name']);
+        $email     = $this->sanitize($_POST['presenter-email']);
+        $name      = $this->sanitize($_POST['session-name']);
 
         // Store the new room and its various associations in the database
         $output = $this->model->create_room($presenter, $email, $name);
@@ -201,7 +201,7 @@ class Room extends Controller
      */
     protected function open_room(  )
     {
-        $room_id = (int) $_POST['room_id'];
+        $room_id = $this->sanitize($_POST['room_id']);
         return $this->model->open_room($room_id);
     }
 
@@ -212,18 +212,8 @@ class Room extends Controller
      */
     protected function close_room(  )
     {
-        $room_id = (int) $_POST['room_id'];
+        $room_id = $this->sanitize($_POST['room_id']);
         return $this->model->close_room($room_id);
-    }
-
-    /**
-     * Loads information about the room
-     *
-     * @return object   The room data
-     */
-    protected function get_room_data(  )
-    {
-        return $this->model->get_room_data($this->room_id);
     }
 
     /**
