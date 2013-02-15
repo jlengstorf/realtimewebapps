@@ -65,7 +65,7 @@ spl_autoload_register('class_autoloader');
 
 // Parses the URI
 $uri_array  = parse_uri();
-$class_name = get_controller_classname(&$uri_array);
+$class_name = get_controller_classname($uri_array);
 $options    = $uri_array;
 
 // Sets a default view if nothing is passed in the URI (i.e. on the home page)
@@ -81,14 +81,18 @@ try {
     $controller = new Error($options);
 }
 
-// Loads the <title> tag value for the view
-$title = $controller->get_title();
-
-
 //-----------------------------------------------------------------------------
 // Outputs the view
 //-----------------------------------------------------------------------------
 
+// Loads the <title> tag value for the header markup
+$title = $controller->get_title();
+
+// Sets the path to the app stylesheet for the header markup
+$dirty_path = APP_URI . '/assets/styles/main.css';
+$css_path = remove_double_slashes($dirty_path);
+
+// Includes the header, requested view, and footer markup
 require_once SYS_PATH . '/inc/header.inc.php';
 
 $controller->output_view();
@@ -136,7 +140,7 @@ function parse_uri(  )
  * @param $uri_array array  The broken up URI
  * @return string           The controller classname
  */
-function get_controller_classname( $uri_array )
+function get_controller_classname( &$uri_array )
 {
     $controller = array_shift($uri_array);
     return ucfirst($controller);
