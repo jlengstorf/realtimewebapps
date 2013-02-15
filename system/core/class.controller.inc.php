@@ -73,12 +73,14 @@ abstract class Controller
     protected function handle_form_submission( $action )
     {
         if ($this->check_nonce()) {
+            
+            // Calls the method specified by the action
             $output = $this->{$this->actions[$action]}();
 
             if (is_array($output) && isset($output['room_id'])) {
                 $room_id = $output['room_id'];
             } else {
-                throw new Exception('Something went wrong.');
+                throw new Exception('Form submission failed.');
             }
 
             // Realtime stuff happens here
@@ -91,6 +93,17 @@ abstract class Controller
         } else {
             throw new Exception('Invalid nonce.');
         }
+    }
+
+    /**
+     * Performs basic input sanitization on a given string
+     *
+     * @param $dirty    string  The string to be sanitized
+     * @return          string  The sanitized string
+     */
+    protected function sanitize( $dirty )
+    {
+        return htmlentities(strip_tags($dirty), ENT_QUOTES);
     }
 
     /**

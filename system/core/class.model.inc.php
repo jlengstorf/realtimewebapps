@@ -27,15 +27,4 @@ abstract class Model
         return TRUE;
     }
 
-    /**
-     * Performs basic input sanitization on a given string
-     *
-     * @param $dirty    string  The string to be sanitized
-     * @return          string  The sanitized string
-     */
-    public function sanitize( $dirty )
-    {
-        return htmlentities(strip_tags($dirty), ENT_QUOTES);
-    }
-
 }
