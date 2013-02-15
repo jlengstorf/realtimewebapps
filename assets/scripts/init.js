@@ -20,7 +20,6 @@
         },
         question = {
             ask: function(data){
-                console.log(data);
                 $(data.markup)
                     .find('input[name=nonce]').val(nonce).end()
                     .hide().prependTo('#questions').slideDown('slow');
