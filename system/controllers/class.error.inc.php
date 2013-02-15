@@ -8,7 +8,7 @@
  */
 class Error extends Controller
 {
-    public $message = NULL;
+    private $_message = NULL;
 
     /**
      * Initializes the view
@@ -19,7 +19,7 @@ class Error extends Controller
     public function __construct( $options )
     {
         if (isset($options[1])) {
-            $this->message = $options[1];
+            $this->_message = $options[1];
         }
     }
 
@@ -41,7 +41,8 @@ class Error extends Controller
     public function output_view(  )
     {
         $view = new View('error');
-        $view->message = $this->message;
+        $view->message = $this->_message;
+        $view->home_link = APP_URI;
 
         $view->render();
     }

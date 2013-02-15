@@ -14,7 +14,7 @@
     <p><code><?php echo $message; ?></code></p>
 
     <p>
-        <a href="<?php echo APP_URI; ?>">&larr; go back to the home page</a>
+        <a href="<?php echo $home_link; ?>">&larr; go back to the home page</a>
     </p>
 
 </section>
