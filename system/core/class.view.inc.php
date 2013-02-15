@@ -18,7 +18,11 @@ class View
      * @param $view array   The view slug
      * @return void
      */
-    public function __construct( $view ) {
+    public function __construct( $view=NULL ) {
+        if (!$view) {
+            throw new Exception("No view slug was supplied.");
+        }
+
         $this->view = $view;
     }
 
