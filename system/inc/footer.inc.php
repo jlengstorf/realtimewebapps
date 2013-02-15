@@ -17,12 +17,6 @@
 
 <script src="http://js.pusher.com/1.12/pusher.min.js"></script>
 <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
-<?php
-
-// Configures the Pusher channel if we're in a room
-$channel = !empty($uri_array[0]) ? 'room_' . $uri_array[0] : 'default';
-
-?>
 <script>
     var pusher  = new Pusher('<?php echo PUSHER_KEY; ?>'),
         channel = pusher.subscribe('<?php echo $channel; ?>');

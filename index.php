@@ -97,6 +97,9 @@ require_once SYS_PATH . '/inc/header.inc.php';
 
 $controller->output_view();
 
+// Configures the Pusher channel if we're in a room
+$channel = !empty($uri_array[0]) ? 'room_' . $uri_array[0] : 'default';
+
 require_once SYS_PATH . '/inc/footer.inc.php';
 
 
