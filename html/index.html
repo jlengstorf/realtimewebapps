@@ -8,8 +8,8 @@
 <title>Realtime Q&amp;A</title>
 
 <!-- Fonts via fonts.com -->
-<link rel="stylesheet" 
-      href="http://fast.fonts.com/cssapi/6a912a6e-163c-4c8b-afe0-e3d22ffab02e.css" />
+<script type="text/javascript" 
+        src="http://fast.fonts.com/jsapi/6a912a6e-163c-4c8b-afe0-e3d22ffab02e.js"></script>
 
 <!-- Main site styles -->
 <link rel="stylesheet" href="http://realtime.local/assets/styles/main.css" />
@@ -27,7 +27,7 @@
 
 <section>
 
-    <form id="attending">
+    <form id="attending" method="post" action="">
         <h2>Attending?</h2>
         <p>Join a room using its ID.</p>
         <label>
@@ -37,7 +37,7 @@
         <input type="submit" value="Join This Room" />
     </form><!--/#attending-->
 
-    <form id="presenting">
+    <form id="presenting" method="post" action="">
         <h2>Presenting?</h2>
         <p>Create a room to start your Q&amp;A session.</p>
         <label>
