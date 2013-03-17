@@ -5,8 +5,8 @@
             &copy; 2013 Jason Lengstorf &amp; Phil Leggetter
         </li><!--/.copyright-->
         <li>
-            Part of <em>Realtime Web Apps: HTML5 Websockets, Pusher, and the 
-            Web&rsquo;s Next Big Thing</em>. 
+            Part of <em>Realtime Web Apps: With HTML5 WebSocket, PHP, 
+                and jQuery</em>. 
         </li>
         <li>
             <a href="http://amzn.to/S2HRiS">Get the Book</a> | 
