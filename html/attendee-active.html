@@ -37,7 +37,7 @@
     </header>
 
     
-    <form id="ask-a-question">
+    <form method="post" id="ask-a-question" action="">
         <label>
             If you have a question and you don’t see it below, ask it here.
             <input type="text" name="new-question" tabindex="1" />
@@ -45,7 +45,7 @@
         <input type="submit" value="Ask" tabindex="2" />
     </form><!--/#ask-a-question-->
  
-    <ul id="questions">
+    <ul id="questions" class="">
         
         <li id="question-1" 
             data-count="27">
@@ -54,7 +54,7 @@
                 What is the best way to implement realtime features today?
             </p>
             
-            <form class="vote">
+            <form method="post" class="vote" action="">
                 <input value="I also have this question." 
                        type="submit"  />
             </form> 
@@ -69,7 +69,7 @@
                 WebSockets API?
             </p>
             
-            <form class="vote">
+            <form method="post" class="vote" action="">
                 <input value="I also have this question." 
                        type="submit"  />
             </form> 
