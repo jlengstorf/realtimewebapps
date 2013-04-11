@@ -1,0 +1,97 @@
+/*
+ * Exercise 02-02, Realtime Web Apps
+ *
+ * @author Jason Lengstorf <jason@copterlabs.com>
+ * @author Phil Leggetter <phil@leggetter.co.uk>
+ */
+
+html { background: #efefdc; }
+
+body {
+    width: 660px;
+    margin: 40px auto;
+    background: #def;
+    border: 2px solid #779;
+
+    /* Creates two shadow effects: outer and inner */
+    -webkit-box-shadow: 0 1px 6px #88a, inset 0 -1px 10px white;
+    -moz-box-shadow: 0 1px 6px #88a, inset 0 -1px 10px white;
+    -o-box-shadow: 0 1px 6px #88a, inset 0 -1px 10px white;
+    -ms-box-shadow: 0 1px 6px #88a, inset 0 -1px 10px white;
+    box-shadow: 0 1px 6px #88a, inset 0 -1px 10px white;
+}
+
+section {
+    margin: 20px 30px 10px;
+    padding: 20px 20px 10px;
+    overflow: hidden;
+    background: white;
+    border: 1px solid #dfdfef;
+
+    /* Creates two shadow effects: outer and inner */
+    -webkit-box-shadow: inset 0 1px 4px #88a, 0 1px 10px white;
+    -moz-box-shadow: inset 0 1px 4px #88a, 0 1px 10px white;
+    -o-box-shadow: inset 0 1px 4px #88a, 0 1px 10px white;
+    -ms-box-shadow: inset 0 1px 4px #88a, 0 1px 10px white;
+    box-shadow: inset 0 1px 4px #88a, 0 1px 10px white;
+}
+
+body,section {
+    /* Sets a border radius for every element that needs it */
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    -o-border-radius: 15px;
+    -ms-border-radius: 15px;
+    border-radius: 15px;
+}
+
+footer { margin: 0 0 10px; }
+
+h1 {
+    margin: 20px 30px 10px;
+    color: #446;
+    font: bold 30px/40px georgia, serif;
+}
+
+p {
+    margin: 0 0 10px;
+    font: 15px/20px sans-serif;
+    color: #557;
+}
+
+h1,p { text-shadow: 1px 1px 1px #88a; }
+
+header p {
+    margin: 0;
+    padding: 2px 40px;
+    border-top: 1px solid #779;
+    border-bottom: 1px solid #779;
+    color: white;
+    font-size: 12px;
+    font-style: italic;
+    line-height: 20px;
+    text-shadow: 1px 1px 1px #779;
+
+    /* Adds a gradient fade */
+    background: #889;
+    background-image: -webkit-linear-gradient(top, #aac 0%, #88a 100%);
+    background-image: -moz-linear-gradient(top, #aac 0%, #88a 100%);
+    background-image: -o-linear-gradient(top, #aac 0%, #88a 100%);
+    background-image: -ms-linear-gradient(top, #aac 0%, #88a 100%);
+    background-image: linear-gradient(top, #aac 0%, #88a 100%);
+    background-image: -webkit-gradient(
+                            linear, 
+                            left top, 
+                            left bottom, 
+                            color-stop(0, #aac), 
+                            color-stop(1, #88a)
+                        );
+}
+
+footer p {
+    margin: 0;
+    color: #889;
+    font: italic 12px/1.67em sans-serif;
+    text-align: center;
+    text-shadow: 1px 1px 1px white;
+}
