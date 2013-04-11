@@ -9,7 +9,7 @@
                 and jQuery</em>. 
         </li>
         <li>
-            <a href="http://amzn.to/S2HRiS">Get the Book</a> | 
+            <a href="http://amzn.to/XKcBbG">Get the Book</a> | 
             <a href="http://cptr.me/UkMSmn">Source Code (on GitHub)</a>
         </li>
     </ul>
