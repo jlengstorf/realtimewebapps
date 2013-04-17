@@ -11,16 +11,6 @@ Documentation
 
 For documentation, [read the book][1].
 
-#### Chapter Code
-
-The `chapters/` dir contains the incomplete builds of the app as they stand at the end of the named chapters. 
-
-The `html/` dir contains the HTML & CSS markup created in Chapter 07.
-
-#### Exercises Code
-
-The `exercises/` dir contains the source from exercises throughout the book.
-
 
 Errata & Source Code
 --------------------
