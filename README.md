@@ -5,10 +5,29 @@ A live feedback system for classrooms, presentations, and conferences.
 
 _(This is the proof-of-concept application for_ Realtime Web Apps: HTML5 Websockets, Pusher, and the Web's Next Big Thing _[Apress 2013]. It is not intended for production use.)_
 
+
 Documentation
 -------------
 
 For documentation, [read the book][1].
+
+#### Chapter Code
+
+The `chapters/` dir contains the incomplete builds of the app as they stand at the end of the named chapters. 
+
+The `html/` dir contains the HTML & CSS markup created in Chapter 07.
+
+#### Exercises Code
+
+The `exercises/` dir contains the source from exercises throughout the book.
+
+
+Errata & Source Code
+--------------------
+
+For the most up-to-date code, issues, errors, and other code-related questions, 
+check the [GitHub repository][5] and post issues in the [issue tracker][6].
+
 
 Authors
 -------
@@ -22,6 +41,7 @@ Authors
 
 * http://www.leggetter.co.uk
 * http://twitter.com/leggetter
+
 
 Copyright  and license
 ----------------------
@@ -40,4 +60,5 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 [2]: https://github.com/jlengstorf
 [3]: https://github.com/leggetter
 [4]: http://opensource.org/licenses/mit-license.php
-
+[5]: https://github.com/jlengstorf/realtimewebapps
+[6]: https://github.com/jlengstorf/realtimewebapps/issues
