@@ -21,6 +21,12 @@ The `html/` dir contains the HTML & CSS markup created in Chapter 07.
 
 The `exercises/` dir contains the source from exercises throughout the book.
 
+#### App Design
+
+The `resources/` dir contains the PSD for the app design. You'll need to 
+purchase a font license for Cooper Black and News Gothic to get the design to 
+display properly.
+
 
 Errata & Source Code
 --------------------
